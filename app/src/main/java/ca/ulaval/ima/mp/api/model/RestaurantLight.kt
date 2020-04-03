@@ -6,7 +6,7 @@ data class RestaurantLight(
     val cuisine : ArrayList<Cuisine>?,
     val type : String?, // [ RESTO, BAR, SNACK ]
     val review_count : Int?,
-    val review_average : Float
+    val review_average : Float?,
     val image : String?,
     val distance : String?,
     val location : String?
