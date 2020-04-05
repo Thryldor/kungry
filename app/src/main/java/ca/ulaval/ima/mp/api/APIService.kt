@@ -36,7 +36,7 @@ object APIService {
             .post(body)
             .build()
         val type = object : TypeToken<TokenOutput>() {}.type
-        executeRequest(request, object : ResponseHandler<TokenOutput>() {
+        executeRequest(request, object : ResponseHandler<TokenOutput> {
             override fun onResult(result: Result<TokenOutput>) {
                 if (result.isSuccessful()) {
                     token = result.getResult()
@@ -57,7 +57,7 @@ object APIService {
             .post(body)
             .build()
         val type = object : TypeToken<TokenOutput>() {}.type
-        executeRequest(request, object : ResponseHandler<TokenOutput>() {
+        executeRequest(request, object : ResponseHandler<TokenOutput> {
             override fun onResult(result: Result<TokenOutput>) {
                 if (result.isSuccessful()) {
                     token = result.getResult()
@@ -93,50 +93,136 @@ object APIService {
 
     // Restaurant
 
-    fun getRestaurants(handler: ResponseHandler<PaginationResult<Restaurant>>) {
+    fun getRestaurants(
+        model: RestaurantsGetRequest,
+        handler: ResponseHandler<PaginationResult<RestaurantLight>>
+    ) {
+        val url = HttpUrl.Builder()
+            .scheme(SCHEME)
+            .host(HOST)
+            .addPathSegment(BASE_PATH)
+            .addPathSegment("restaurant")
+            .addQueryParameter("page", model.page.toString())
+            .addQueryParameter("page_size", model.page_size.toString())
+            .build()
+
         val request: Request = Request.Builder()
-            .url("$BASE_URL/restaurant/")
+            .url(url)
             .get()
             .build()
 
-        val type = object : TypeToken<PaginationResult<Restaurant>>() {}.type
+        val type = object : TypeToken<PaginationResult<RestaurantLight>>() {}.type
         executeRequest(request, handler, type)
-
-//    GET
-//    /restaurant/
-//    restaurant_list
     }
 
-    fun searchRestaurant() {
-//    GET
-//    /restaurant/search/
-//    restaurant_search
+    fun searchRestaurant(
+        model: RestaurantsSearchRequest,
+        handler: ResponseHandler<PaginationResult<RestaurantLight>>
+    ) {
+        val url = HttpUrl.Builder()
+            .scheme(SCHEME)
+            .host(HOST)
+            .addPathSegment(BASE_PATH)
+            .addPathSegment("restaurant")
+            .addPathSegment("search")
+            .addQueryParameter("page", model.page.toString())
+            .addQueryParameter("page_size", model.page_size.toString())
+            .addQueryParameter("latitude", model.latitude.toString())
+            .addQueryParameter("longitude", model.longitude.toString())
+            .addQueryParameter("radius", model.radius.toString())
+            .addQueryParameter("text", model.text.toString())
+            .build()
+
+        val request: Request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        val type = object : TypeToken<PaginationResult<RestaurantLight>>() {}.type
+        executeRequest(request, handler, type)
     }
 
-    fun getRestaurantById() {
-//    GET
-//    /restaurant/{id}/
-//    restaurant_read
+    fun getRestaurantById(id: Int, handler: ResponseHandler<Restaurant>) {
+        val url = HttpUrl.Builder()
+            .scheme(SCHEME)
+            .host(HOST)
+            .addPathSegment(BASE_PATH)
+            .addPathSegment("restaurant")
+            .addPathSegment(id.toString())
+            .build()
+
+        val request: Request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        val type = object : TypeToken<Restaurant>() {}.type
+        executeRequest(request, handler, type)
     }
 
-    fun getRestaurantReviews() {
-//    GET
-//    /restaurant/{id}/reviews/
-//    restaurant_reviews
+    fun getRestaurantReviews(id: Int, handler: ResponseHandler<PaginationResult<Review>>) {
+        val url = HttpUrl.Builder()
+            .scheme(SCHEME)
+            .host(HOST)
+            .addPathSegment(BASE_PATH)
+            .addPathSegment("restaurant")
+            .addPathSegment(id.toString())
+            .addPathSegment("reviews")
+            .build()
+
+        val request: Request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        val type = object : TypeToken<PaginationResult<Review>>() {}.type
+        executeRequest(request, handler, type)
     }
 
     // Review
 
-    fun createReview() {
-//    POST
-//    /review/
-//    review_create
+    fun createReview(model: CreateReview, handler: ResponseHandler<Review>) {
+        executeAuthenticatedCall(object : AuthResponseHandler<Review>(handler) {
+            override fun onAuthResult(
+                result: Result<String>,
+                customHandler: ResponseHandler<Review>
+            ) {
+                if (!result.isSuccessful())
+                    return customHandler.onResult(Result(result))
+                val authToken = result.getResult()
+                val jsonBody = gson.toJson(model)
+                val body: RequestBody = RequestBody.create(JSON, jsonBody)
+                val request: Request = Request.Builder()
+                    .url("$BASE_URL/review/")
+                    .addHeader("Authorization", "Bearer $authToken")
+                    .post(body)
+                    .build()
+                val type = object : TypeToken<Review>() {}.type
+                executeRequest(request, customHandler, type)
+            }
+        })
     }
 
-    fun getMyReviews() {
-//    GET
-//    /review/mine/
-//    review_mine
+
+    fun getMyReviews(handler: ResponseHandler<PaginationResult<Review>>) {
+        executeAuthenticatedCall(object : AuthResponseHandler<PaginationResult<Review>>(handler) {
+            override fun onAuthResult(
+                result: Result<String>,
+                customHandler: ResponseHandler<PaginationResult<Review>>
+            ) {
+                if (!result.isSuccessful())
+                    return customHandler.onResult(Result(result))
+                val authToken = result.getResult()
+                val request: Request = Request.Builder()
+                    .url("$BASE_URL/review/mine/")
+                    .addHeader("Authorization", "Bearer $authToken")
+                    .get()
+                    .build()
+
+                val type = object : TypeToken<PaginationResult<Review>>() {}.type
+                executeRequest(request, customHandler, type)
+            }
+        })
     }
 
     fun attachImageToReview() {
@@ -145,14 +231,14 @@ object APIService {
 //    review_image
     }
 
-    // APIService types
+// APIService types
 
     abstract class AuthResponseHandler<T>(val handler: ResponseHandler<T>) {
         abstract fun onAuthResult(result: Result<String>, customHandler: ResponseHandler<T>)
     }
 
-    abstract class ResponseHandler<T> {
-        abstract fun onResult(result: Result<T>)
+    interface ResponseHandler<T> {
+        fun onResult(result: Result<T>)
     }
 
     class Result<T> {
@@ -223,7 +309,7 @@ object APIService {
     class CallFailureException(val e: IOException?, val wrapper: ResponseWrapper?) : Exception()
 
 
-    // APIService utils
+// APIService utils
 
     private fun isTokenExpired(): Boolean {
         val date = Date()
@@ -270,7 +356,7 @@ object APIService {
 
     private fun <T> executeAuthenticatedCall(handler: AuthResponseHandler<T>) {
         // result middleware transforming 401 callExceptions in authenticationFailureException
-        val authCheck = object : ResponseHandler<T>() {
+        val authCheck = object : ResponseHandler<T> {
             override fun onResult(result: Result<T>) {
                 try {
                     result.getResult()
@@ -300,7 +386,7 @@ object APIService {
             .post(body)
             .build()
         val type = object : TypeToken<TokenOutput>() {}.type
-        executeRequest(request, object : ResponseHandler<TokenOutput>() {
+        executeRequest(request, object : ResponseHandler<TokenOutput> {
             override fun onResult(result: Result<TokenOutput>) {
                 token = result.getResult()
                 logging_timestamp = Date().time

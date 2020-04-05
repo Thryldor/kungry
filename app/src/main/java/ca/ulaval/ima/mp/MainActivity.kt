@@ -11,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import ca.ulaval.ima.mp.api.APIService
+import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.*
 import java.io.IOException
 import java.lang.Exception
@@ -36,25 +37,18 @@ class MainActivity : AppCompatActivity() {
                 AccountLogin(
                     email = "cedric.thomas.1@ulaval.ca",
                     password = "CedricThomas42"
-                ), object : APIService.ResponseHandler<TokenOutput>() {
-                    override fun onResult(result: APIService.Result<TokenOutput>) {
-                        val tokenInfo = result.getResult()
-                        Log.d("MP", tokenInfo.expires_in.toString())
-                        APIService.me(object : APIService.ResponseHandler<Account>() {
-                            override fun onResult(result: APIService.Result<Account>) {
-                                try {
-                                    val account = result.getResult()
-                                    Log.d("MP", account.email)
-                                } catch (e: APIService.AuthenticationFailuredException) {
-                                    Log.d("MP", e!!.wrapper!!.error!!.display)
-                                }
-                            }
-                        });
-
-                    }
-                }
-            )
+                ), createHandler { result ->
+                    val tokenInfo = result.getResult()
+                    APIService.me(createHandler { result ->
+                        try {
+                            val account = result.getResult()
+                            Log.d("MP", account.email)
+                        } catch (e: APIService.AuthenticationFailuredException) {
+                            Log.d("MP", e!!.wrapper!!.error!!.display)
+                        }
+                    });
+                })
+            navView.setupWithNavController(navController)
         }
-        navView.setupWithNavController(navController)
     }
 }
