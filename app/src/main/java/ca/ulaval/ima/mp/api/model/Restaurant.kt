@@ -7,7 +7,7 @@ data class Restaurant(
     val review_count : Int?,
     val opening_hours : ArrayList<OpeningHour>?,
     val review_average : Float?,
-    val location : String?,
+    val location : Location?,
     val reviews : ArrayList<Review>?,
     val name : String?,
     val website : String?,
