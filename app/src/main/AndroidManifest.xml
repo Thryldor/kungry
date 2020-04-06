@@ -12,6 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.account.AccountActivity"></activity>
+        <activity android:name=".ui.account.RegisterActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
