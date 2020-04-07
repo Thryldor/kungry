@@ -11,6 +11,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import ca.ulaval.ima.mp.api.APIService
+import ca.ulaval.ima.mp.api.createHandler
+import ca.ulaval.ima.mp.api.model.AccountLogin
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment
 import ca.ulaval.ima.mp.ui.restaurant.dummy.DummyContent
 
@@ -27,7 +30,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
         val appBarConfiguration = AppBarConfiguration(setOf(
             R.id.navigation_map, R.id.navigation_restaurants, R.id.navigation_profile))
         setupActionBarWithNavController(navController, appBarConfiguration)
-/*        navController.addOnDestinationChangedListener { _, _, _ ->
+        navController.addOnDestinationChangedListener { _, _, _ ->
             APIService.login(
                 AccountLogin(
                     email = "cedric.thomas.1@ulaval.ca",
@@ -43,8 +46,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
                         }
                     });
                 })
-            navView.setupWithNavController(navController)
-        }*/
+        }
         navView.setupWithNavController(navController)
     }
 
