@@ -1,4 +1,4 @@
-package ca.ulaval.ima.mp.ui.account
+package ca.ulaval.ima.mp.ui.profile
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

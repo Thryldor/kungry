@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.account.RegisterActivity">
+    tools:context=".ui.profile.RegisterActivity">
 
     <TextView
         android:layout_width="wrap_content"
