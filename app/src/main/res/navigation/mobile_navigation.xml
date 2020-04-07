@@ -18,5 +18,15 @@
     <fragment
         android:id="@+id/navigation_profile"
         android:name="ca.ulaval.ima.mp.ui.profile.ProfileFragment"
-        tools:layout="@layout/profile_fragment" />
+        tools:layout="@layout/profile_fragment" >
+        <action
+            android:id="@+id/action_firstFragment_to_secondFragment"
+            app:destination="@id/navigation_map2" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_map2"
+        android:name="ca.ulaval.ima.mp.ui.map.MapFragment"
+        tools:layout="@layout/map_fragment" />
+
 </navigation>

@@ -2,11 +2,9 @@ package ca.ulaval.ima.mp
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
 import androidx.appcompat.app.ActionBar
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -16,6 +14,8 @@ import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.AccountLogin
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment
 import ca.ulaval.ima.mp.ui.restaurant.dummy.DummyContent
+import com.google.android.material.bottomnavigation.BottomNavigationView
+
 
 class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantListener {
 
