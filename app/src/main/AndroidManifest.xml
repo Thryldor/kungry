@@ -13,8 +13,6 @@
         android:supportsRtl="true"
 		
         android:theme="@style/KungryTheme" >
-        <activity android:name=".ui.profile.ProfileActivity" />
-        <activity android:name=".ui.profile.RegisterActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

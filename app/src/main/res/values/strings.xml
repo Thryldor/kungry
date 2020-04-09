@@ -8,7 +8,19 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
 
+    <string name="connection_label">Connexion</string>
+    <string name="register_label">Inscription</string>
+    <string name="form_first_name">Prénom</string>
+    <string name="form_last_name">Nom</string>
+    <string name="form_email">Courriel</string>
+    <string name="form_password">Mot de passe</string>
+    <string name="background_description">Background Image</string>
+
+    <string name="switch_register_button">Nouveau avec Kungry ?</string>
+    <string name="switch_login_button">Déjà abonnée?</string>
+
     <string name="connect_button">Me Connecter</string>
+    <string name="register_button">M\'inscrire</string>
     <string name="title_notifications">Notifications</string>
     <string name="logo_kungry">Logo Kungry</string>
 </resources>

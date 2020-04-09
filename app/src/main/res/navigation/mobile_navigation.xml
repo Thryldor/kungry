@@ -16,17 +16,22 @@
         tools:layout="@layout/fragment_restaurant_item" />
 
     <fragment
-        android:id="@+id/navigation_profile"
-        android:name="ca.ulaval.ima.mp.ui.profile.ProfileFragment"
-        tools:layout="@layout/profile_fragment" >
+        android:id="@+id/navigation_login"
+        android:name="ca.ulaval.ima.mp.ui.profile.LoginFragment"
+        tools:layout="@layout/login_fragment" >
         <action
-            android:id="@+id/action_firstFragment_to_secondFragment"
-            app:destination="@id/navigation_map2" />
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/navigation_register" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_map2"
-        android:name="ca.ulaval.ima.mp.ui.map.MapFragment"
-        tools:layout="@layout/map_fragment" />
+        android:id="@+id/navigation_register"
+        android:name="ca.ulaval.ima.mp.ui.profile.RegisterFragment"
+        tools:layout="@layout/register_fragment">
+        <action
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/navigation_login" />
+        />
+    </fragment>
 
 </navigation>
