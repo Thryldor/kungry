@@ -25,7 +25,7 @@ class LoginFragment : Fragment() {
 
     private fun setSubmitButton(button: Button) {
         button.setOnClickListener {
-
+            activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_login_to_account)
         }
     }
 
@@ -42,16 +42,11 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.login_fragment, container, false)
+        (activity as AppCompatActivity).supportActionBar?.hide()
 
         setBackground(root.findViewById(R.id.form_background))
         setSubmitButton(root.findViewById(R.id.button_login))
         setSwitchRegister(root.findViewById(R.id.switch_register))
-        (activity as AppCompatActivity).supportActionBar?.hide()
-
-        val loginButton: Button = root.findViewById(R.id.button_login)
-        loginButton.setOnClickListener {
-            activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_login_to_register)
-        }
         return root
     }
 }

@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_login_to_register"
             app:destination="@id/navigation_register" />
+        <action
+            android:id="@+id/action_login_to_account"
+            app:destination="@id/navigation_account" />
     </fragment>
 
     <fragment
@@ -30,6 +33,16 @@
         tools:layout="@layout/register_fragment">
         <action
             android:id="@+id/action_register_to_login"
+            app:destination="@id/navigation_login" />
+        />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="ca.ulaval.ima.mp.ui.profile.AccountFragment"
+        tools:layout="@layout/account_fragment">
+        <action
+            android:id="@+id/action_account_to_login"
             app:destination="@id/navigation_login" />
         />
     </fragment>
