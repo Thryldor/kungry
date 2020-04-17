@@ -5,19 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
-import ca.ulaval.ima.mp.api.model.AccountLogin
 import ca.ulaval.ima.mp.api.model.CreateAccount
 import com.squareup.picasso.Picasso
+
 
 class RegisterFragment : Fragment() {
 
@@ -48,22 +45,24 @@ class RegisterFragment : Fragment() {
             getValues(root)
             APIService.createAccount(
                 CreateAccount(
-                    first_name = "Philippe",//this.name,
-                    last_name = "De Sousa", //this.lastName,
-                    email = "philippe.desousaviolante@gmail.com", //this.email,
-                    password = "1234" //this.password
+                    first_name = this.name,
+                    last_name = this.lastName,
+                    email = this.email,
+                    password = this.password
                 ), createHandler { result ->
-                    val tokenInfo = result.getResult()
-                    APIService.me(createHandler { result ->
-                        try {
-                            val account = result.getResult()
-                            Log.d("MP", account.email)
-                        } catch (e: APIService.AuthenticationFailuredException) {
-                            Log.d("MP", e!!.wrapper!!.error!!.display)
-                        }
-                    });
+                    try {
+                        result.getResult()
+                        activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_register_to_login)
+                    }
+                    catch (e: APIService.CallFailureException) {
+                        val toast = Toast.makeText(
+                            activity,
+                            e.wrapper?.error?.display,
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
                 })
-            activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_register_to_login)
         }
     }
 

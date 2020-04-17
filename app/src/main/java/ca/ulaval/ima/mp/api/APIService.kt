@@ -243,7 +243,7 @@ object APIService {
 
     class Result<T> {
         private var data: T? = null
-        private var authenticationFailuredException: AuthenticationFailuredException? = null
+        private var authenticationFailureException: AuthenticationFailuredException? = null
         private var callFailuredException: CallFailureException? = null
         private var notLoggedException: NotLoggedException? = null
 
@@ -256,7 +256,7 @@ object APIService {
         }
 
         constructor(e: AuthenticationFailuredException) {
-            authenticationFailuredException = e
+            authenticationFailureException = e
         }
 
         constructor(e: NotLoggedException) {
@@ -265,7 +265,7 @@ object APIService {
 
         constructor(result: Result<*>) {
             notLoggedException = result.notLoggedException
-            authenticationFailuredException = result.authenticationFailuredException
+            authenticationFailureException = result.authenticationFailureException
             callFailuredException = result.callFailuredException
         }
 
@@ -278,8 +278,8 @@ object APIService {
                 throw callFailuredException!!
             if (notLoggedException != null)
                 throw notLoggedException!!
-            if (authenticationFailuredException != null)
-                throw authenticationFailuredException!!
+            if (authenticationFailureException != null)
+                throw authenticationFailureException!!
             return data!!
         }
 
