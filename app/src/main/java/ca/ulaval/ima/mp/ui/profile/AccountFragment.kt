@@ -10,12 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import ca.ulaval.ima.mp.R
-import kotlinx.android.synthetic.main.account_fragment.*
 
 class AccountFragment : Fragment() {
 
-    private val firstName = "John"
-    private val lastName = "Doe"
+    private val name = "John Doe"
     private val email = "johndoe@mail.com"
     private val eval = 2
 
@@ -24,7 +22,7 @@ class AccountFragment : Fragment() {
     }
 
     private fun showInfos(root: View) {
-        (root.findViewById(R.id.name_info) as TextView).text = firstName + " " + lastName
+        (root.findViewById(R.id.name_info) as TextView).text = name
         (root.findViewById(R.id.email_info) as TextView).text = email
         (root.findViewById(R.id.eval_info) as TextView).text = eval.toString()
     }
