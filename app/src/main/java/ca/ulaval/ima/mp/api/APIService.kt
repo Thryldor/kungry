@@ -2,6 +2,7 @@ package ca.ulaval.ima.mp.api
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import ca.ulaval.ima.mp.api.model.*
 import com.google.gson.Gson
 import com.google.gson.JsonElement
