@@ -31,7 +31,7 @@ class AccountFragment : Fragment() {
                 val nb_eval = account.total_review_count!!
 
                 showInfos(root, name, email, nb_eval)
-            } catch (e: APIService.AuthenticationFailuredException) {
+            } catch (e: APIService.AuthenticationFailureException) {
                 val toast = Toast.makeText(
                     activity,
                     e.wrapper?.error?.display,
