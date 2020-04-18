@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
                         try {
                             val account = result.getResult()
                             Log.d("MP", account.email)
-                        } catch (e: APIService.AuthenticationFailuredException) {
+                        } catch (e: APIService.AuthenticationFailureException) {
                             Log.d("MP", e!!.wrapper!!.error!!.display)
                         }
                     });
