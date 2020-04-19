@@ -6,5 +6,6 @@ data class Account(
     val email : String?,
     val created : String?,
     val updated : String?,
-    val user : Int?
+    val user : Int?,
+    val total_review_count : Int?
 )
