@@ -2,6 +2,7 @@ package ca.ulaval.ima.mp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.ActionBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
         setupActionBarWithNavController(navController, appBarConfiguration)
         navController.addOnDestinationChangedListener { _, _, _ ->
             val intent = Intent(this, CreationActivity::class.java).apply {
-                putExtra(CreationActivity::RESTAURANT_ID_KEY.toString(), "id")
+                putExtra(CreationActivity.RESTAURANT_ID_KEY, "id")
             }
             startActivity(intent)
         }
