@@ -33,7 +33,7 @@ class RestaurantListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_restaurant_list, container, false)
+        val view = inflater.inflate(R.layout.restaurant_list_fragment, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {

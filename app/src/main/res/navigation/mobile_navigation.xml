@@ -13,7 +13,7 @@
     <fragment
         android:id="@+id/navigation_restaurants"
         android:name="ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment"
-        tools:layout="@layout/fragment_restaurant_item" />
+        tools:layout="@layout/restaurant_list_item_fragment" />
 
     <fragment
         android:id="@+id/navigation_login"
