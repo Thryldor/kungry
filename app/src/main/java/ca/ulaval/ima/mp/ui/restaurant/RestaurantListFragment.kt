@@ -2,6 +2,7 @@ package ca.ulaval.ima.mp.ui.restaurant
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,10 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import ca.ulaval.ima.mp.R
-
-import ca.ulaval.ima.mp.ui.restaurant.dummy.DummyContent
-import ca.ulaval.ima.mp.ui.restaurant.dummy.DummyContent.DummyItem
+import ca.ulaval.ima.mp.api.APIService
+import ca.ulaval.ima.mp.api.createHandler
+import ca.ulaval.ima.mp.api.model.RestaurantLight
+import ca.ulaval.ima.mp.api.model.RestaurantsSearchRequest
+import java.lang.Exception
 
 class RestaurantListFragment : Fragment() {
 
@@ -21,28 +25,38 @@ class RestaurantListFragment : Fragment() {
 
     private var listener: OnRestaurantListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.restaurant_list_fragment, container, false)
+        (activity as AppCompatActivity).supportActionBar?.show()
 
-        // Set the adapter
         if (view is RecyclerView) {
             with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-                adapter = RestaurantRecyclerViewAdapter(DummyContent.ITEMS, listener)
+                layoutManager = LinearLayoutManager(context)
+                APIService.searchRestaurant(
+                    RestaurantsSearchRequest(
+                        latitude = 40,
+                        longitude = -70,
+                        page = 1,
+                        page_size = 20,
+                        radius = 5000,
+                        text = ""), createHandler { result ->
+                        try {
+                            val list: ArrayList<RestaurantLight> = result.getResult().results
+                            Log.d("MP", "RESULT: " + list.toString())
+                            adapter = RestaurantRecyclerViewAdapter(list, listener)
+                        }
+                        catch (e: Exception) {
+                            when(e) {
+                                is APIService.CallFailureException -> {
+                                    Log.d("MP", "Error: " + e.wrapper?.error?.display)
+                                }
+                            }
+                            Log.d("MP", "Error : " + e.toString())
+                        }
+                    })
             }
         }
         return view
@@ -62,34 +76,7 @@ class RestaurantListFragment : Fragment() {
         listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson
-     * [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
     interface OnRestaurantListener {
-        // TODO: Update argument type and name
-        fun onRestaurantClick(item: DummyItem?)
-    }
-
-    companion object {
-
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            RestaurantListFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
+        fun onRestaurantClick(item: RestaurantLight?)
     }
 }
