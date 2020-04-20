@@ -28,7 +28,8 @@ object APIService {
     private val gson: Gson = Gson()
     private var logging_timestamp: Long? = null
     private var token: TokenOutput? = null
-    private var logged = false
+    var logged = false
+        private set
 
     // Account
 

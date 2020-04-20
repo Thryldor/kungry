@@ -2,12 +2,16 @@ package ca.ulaval.ima.mp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import ca.ulaval.ima.mp.api.APIService
+import ca.ulaval.ima.mp.api.createHandler
+import ca.ulaval.ima.mp.api.model.AccountLogin
 import ca.ulaval.ima.mp.ui.review.CreationActivity
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment
 import ca.ulaval.ima.mp.ui.restaurant.dummy.DummyContent
@@ -26,14 +30,33 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
-        val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.navigation_map, R.id.navigation_restaurants, R.id.navigation_login))
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_map, R.id.navigation_restaurants, R.id.navigation_login
+            )
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navController.addOnDestinationChangedListener { _, _, _ ->
-            val intent = Intent(this, CreationActivity::class.java).apply {
-                putExtra(CreationActivity.RESTAURANT_ID_KEY, "1")
-            }
-            startActivity(intent)
+            APIService.login(
+                AccountLogin(
+                    email = "cedric.thomas.1@ulaval.ca",
+                    password = "CedricThomas42"
+                ), createHandler { result ->
+                    val tokenInfo = result.getResult()
+                    APIService.me(createHandler { result ->
+                        try {
+                            val account = result.getResult()
+                            Log.d("MP", account!!.email)
+                        } catch (e: APIService.AuthenticationFailureException) {
+                            Log.d("MP", e!!.wrapper!!.error!!.display)
+                        }
+                        val intent = Intent(this, CreationActivity::class.java).apply {
+                            putExtra(CreationActivity.RESTAURANT_ID_KEY, "1")
+                        }
+                        startActivity(intent)
+                    });
+                })
+
         }
         navView.setupWithNavController(navController)
     }

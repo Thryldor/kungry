@@ -35,6 +35,8 @@ class CreationActivity : AppCompatActivity() {
         setSupportActionBar(action_bar.toolbar as Toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        if (!APIService.logged)
+            throw RuntimeException("Creation activity need an authenticated access")
         restaurantId = intent.getStringExtra(RESTAURANT_ID_KEY)
             ?: throw RuntimeException("No restaurant ID passed to review creation activity")
         submit.setOnClickListener {
@@ -49,7 +51,9 @@ class CreationActivity : AppCompatActivity() {
     private fun sendForm() {
         val reqId = restaurantId!!.toInt()
         val reqRating = rate.rating.toInt()
-        val reqComment = comment.text.toString()
+        var reqComment: String? = comment.text.toString()
+        if (reqComment!!.isEmpty())
+            reqComment = null
         APIService.createReview(CreateReview(
             reqId,
             reqRating,
@@ -60,23 +64,28 @@ class CreationActivity : AppCompatActivity() {
     }
 
     private fun handleFormResult(res: APIService.Result<Review>) {
+        val review: Review
         try {
-            res.getResult()
+            review = res.getResult()
         } catch (e: APIService.CallFailureException) {
-            Toast.makeText(MiniProject.appContext, e.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
-            throw e
+            Toast.makeText(MiniProject.appContext, "Review creation error : " + e.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
+            return
         }
-        res.getResult()
-        bitmaps.forEach { bitmap ->
+        if (bitmaps.size > 0)
+            attachBitmaps(review)
+        finish()
+    }
+
+    private fun attachBitmaps(review: Review) {
+        for (bitmap in bitmaps) {
             APIService.attachImageToReview(Upload(
-                restaurantId!!.toInt(),
+                review.id!!,
                 bitmap
             ), createHandler {res ->
                 try {
                     res.getResult()
                 } catch (e: APIService.CallFailureException) {
-                    Toast.makeText(MiniProject.appContext, e.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
-                    throw e
+                    Toast.makeText(MiniProject.appContext,  "Image upload error : " + e.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
                 }
             })
         }
