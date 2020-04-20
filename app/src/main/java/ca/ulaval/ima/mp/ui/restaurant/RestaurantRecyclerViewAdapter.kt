@@ -11,7 +11,7 @@ import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment.OnRestaurantListener
 import ca.ulaval.ima.mp.ui.restaurant.dummy.DummyContent.DummyItem
 
-import kotlinx.android.synthetic.main.fragment_restaurant_item.view.*
+import kotlinx.android.synthetic.main.restaurant_list_item_fragment.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
@@ -36,7 +36,7 @@ class RestaurantRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_restaurant_item, parent, false)
+            .inflate(R.layout.restaurant_list_item_fragment, parent, false)
         return ViewHolder(view)
     }
 
