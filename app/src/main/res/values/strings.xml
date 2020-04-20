@@ -9,4 +9,14 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="logo_kungry">Logo Kungry</string>
+
+
+
+    <!--    Review creation-->
+    <string name="review_creaton_submit">SOUMETTRE</string>
+    <string name="review_creaton_rate_title">Évaluation</string>
+    <string name="review_creaton_comment_title">Commentaire</string>
+    <string name="review_creaton_photo_title">Ajouter une photo</string>
+    <string name="review_creaton_falcultative">(Facultatif)</string>
+
 </resources>
