@@ -2,9 +2,8 @@ package ca.ulaval.ima.mp
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -13,6 +12,8 @@ import ca.ulaval.ima.mp.ui.review.CreationActivity
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment
 import ca.ulaval.ima.mp.ui.restaurant.dummy.DummyContent
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.action_bar.view.*
+import kotlinx.android.synthetic.main.evaluation_creation_activity.*
 
 
 class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantListener {
@@ -38,8 +39,8 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
     }
 
     fun setupCustomActionBar() {
-        supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-        supportActionBar!!.setCustomView(R.layout.action_bar)
+        setSupportActionBar((action_bar.toolbar) as Toolbar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
     }
 
     override fun onRestaurantClick(item: DummyContent.DummyItem?) {

@@ -1,11 +1,12 @@
 package ca.ulaval.ima.mp.ui.review
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import ca.ulaval.ima.mp.R
+import kotlinx.android.synthetic.main.action_bar.view.*
+import kotlinx.android.synthetic.main.evaluation_creation_activity.*
 
 
 class CreationActivity : AppCompatActivity() {
@@ -13,13 +14,14 @@ class CreationActivity : AppCompatActivity() {
     companion object {
         val RESTAURANT_ID_KEY: String = "RESTAURANT_ID_KEY"
     }
+
     private var restaurantId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.evaluation_creation_activity)
-        supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-        supportActionBar!!.setCustomView(R.layout.action_bar)
+        setSupportActionBar(action_bar.toolbar as Toolbar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         restaurantId = intent.getStringExtra(RESTAURANT_ID_KEY)
             ?: throw RuntimeException("No restaurant ID passed to review creation activity")
