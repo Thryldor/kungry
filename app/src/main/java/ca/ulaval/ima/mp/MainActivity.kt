@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
         setupActionBarWithNavController(navController, appBarConfiguration)
         navController.addOnDestinationChangedListener { _, _, _ ->
             val intent = Intent(this, CreationActivity::class.java).apply {
-                putExtra(CreationActivity.RESTAURANT_ID_KEY, "id")
+                putExtra(CreationActivity.RESTAURANT_ID_KEY, "1")
             }
             startActivity(intent)
         }

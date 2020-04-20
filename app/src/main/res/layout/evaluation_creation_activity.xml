@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:theme="@style/KungryTheme.RatingBar"
+        android:stepSize="1"
         app:layout_constraintLeft_toLeftOf="@id/rate_title"
         app:layout_constraintTop_toBottomOf="@+id/rate_title" />
 
@@ -80,6 +81,7 @@
         app:layout_constraintTop_toBottomOf="@id/comment_title">
 
         <EditText
+            android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
@@ -133,6 +135,7 @@
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/add_image"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"

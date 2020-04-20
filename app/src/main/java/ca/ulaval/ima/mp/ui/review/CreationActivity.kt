@@ -1,10 +1,21 @@
 package ca.ulaval.ima.mp.ui.review
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import ca.ulaval.ima.mp.MiniProject
 import ca.ulaval.ima.mp.R
+import ca.ulaval.ima.mp.api.APIService
+import ca.ulaval.ima.mp.api.UploadService
+import ca.ulaval.ima.mp.api.createHandler
+import ca.ulaval.ima.mp.api.model.CreateReview
+import ca.ulaval.ima.mp.api.model.Review
+import ca.ulaval.ima.mp.api.model.Upload
 import kotlinx.android.synthetic.main.action_bar.view.*
 import kotlinx.android.synthetic.main.evaluation_creation_activity.*
 
@@ -16,6 +27,7 @@ class CreationActivity : AppCompatActivity() {
     }
 
     private var restaurantId: String? = null
+    private var bitmaps: ArrayList<Bitmap> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +37,50 @@ class CreationActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         restaurantId = intent.getStringExtra(RESTAURANT_ID_KEY)
             ?: throw RuntimeException("No restaurant ID passed to review creation activity")
+        submit.setOnClickListener {
+            sendForm()
+        }
+        add_image.setOnClickListener {
+            UploadService.choose(this)
+        }
     }
 
+
+    private fun sendForm() {
+        val reqId = restaurantId!!.toInt()
+        val reqRating = rate.rating.toInt()
+        val reqComment = comment.text.toString()
+        APIService.createReview(CreateReview(
+            reqId,
+            reqRating,
+            reqComment
+        ), createHandler { res ->
+            handleFormResult(res)
+        })
+    }
+
+    private fun handleFormResult(res: APIService.Result<Review>) {
+        try {
+            res.getResult()
+        } catch (e: APIService.CallFailureException) {
+            Toast.makeText(MiniProject.appContext, e.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
+            throw e
+        }
+        res.getResult()
+        bitmaps.forEach { bitmap ->
+            APIService.attachImageToReview(Upload(
+                restaurantId!!.toInt(),
+                bitmap
+            ), createHandler {res ->
+                try {
+                    res.getResult()
+                } catch (e: APIService.CallFailureException) {
+                    Toast.makeText(MiniProject.appContext, e.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
+                    throw e
+                }
+            })
+        }
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -38,5 +92,11 @@ class CreationActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val bitmap = UploadService.extractBitmapFromResult(requestCode, resultCode, data)
+        if (bitmap != null)
+            bitmaps.add(bitmap)
+    }
 
 }
