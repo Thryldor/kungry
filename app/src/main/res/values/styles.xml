@@ -1,11 +1,19 @@
 <resources>
 
-    <style name="KungryTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    </style>
+    <style name="KungryTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
 
     <style name="KungryTheme.RatingBar" parent="KungryTheme">
         <item name="colorControlNormal">@color/star_gray</item>
         <item name="colorControlActivated">@color/light_green</item>
     </style>
+
+    <style name="KungryTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="KungryTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="KungryTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

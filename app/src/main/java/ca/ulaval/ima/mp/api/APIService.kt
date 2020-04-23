@@ -165,14 +165,16 @@ object APIService {
         executeRequest(request, handler, type)
     }
 
-    fun getRestaurantReviews(id: Int, handler: ResponseHandler<PaginationResult<Review>>) {
+    fun getRestaurantReviews(model: RestaurantGetReviewsRequest, handler: ResponseHandler<PaginationResult<Review>>) {
         val url = HttpUrl.Builder()
             .scheme(SCHEME)
             .host(HOST)
             .addPathSegment(BASE_PATH)
             .addPathSegment("restaurant")
-            .addPathSegment(id.toString())
+            .addPathSegment(model.id.toString())
             .addPathSegment("reviews")
+            .addQueryParameter("page", model.page.toString())
+            .addQueryParameter("page_size", model.page_size.toString())
             .build()
 
         val request: Request = Request.Builder()

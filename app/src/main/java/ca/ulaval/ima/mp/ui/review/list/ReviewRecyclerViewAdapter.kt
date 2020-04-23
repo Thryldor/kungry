@@ -1,64 +1,80 @@
 package ca.ulaval.ima.mp.ui.review.list
 
-import androidx.recyclerview.widget.RecyclerView
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import ca.ulaval.ima.mp.R
+import ca.ulaval.ima.mp.api.model.Review
 
 
-import ca.ulaval.ima.mp.ui.review.list.ReviewFragment.OnListFragmentInteractionListener
-import ca.ulaval.ima.mp.ui.review.list.dummy.DummyContent.DummyItem
+class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-import kotlinx.android.synthetic.main.review_list_item_fragment.view.*
+    private val REVIEW_WITH_IMAGE = 0
+    private val REVIEW_WITHOUT_IMAGE = 1
+    private val LOADER = 2
 
-/**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
- */
-class ReviewRecyclerViewAdapter(
-    private val mValues: List<DummyItem>,
-    private val mListener: OnListFragmentInteractionListener?
-) : RecyclerView.Adapter<ReviewRecyclerViewAdapter.ViewHolder>() {
+    private var isLoadingAdded = false
+    private val reviews: ArrayList<Review> = ArrayList()
 
-    private val mOnClickListener: View.OnClickListener
-
-    init {
-        mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyItem
-            // Notify the active callbacks interface (the activity, if the fragment is attached to
-            // one) that an item has been selected.
-            mListener?.onListFragmentInteraction(item)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            LOADER ->  LoaderViewHolder(inflater.inflate(R.layout.review_list_loading_item_fragment, parent, false))
+            REVIEW_WITHOUT_IMAGE -> SimpleViewHolder(inflater.inflate(R.layout.review_list_item_fragment, parent, false))
+            else -> throw RuntimeException("Invalid view holder type")
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.review_list_item_fragment, parent, false)
-        return ViewHolder(view)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = reviews[position]
+        if (getItemViewType(position) == REVIEW_WITHOUT_IMAGE)
+            (holder as SimpleViewHolder).username.text = item.creator!!.first_name
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
-        holder.mIdView.text = item.id
-        holder.mContentView.text = item.content
+    override fun getItemCount(): Int = reviews.size
 
-        with(holder.mView) {
-            tag = item
-            setOnClickListener(mOnClickListener)
-        }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == reviews.size - 1 && isLoadingAdded) LOADER else REVIEW_WITHOUT_IMAGE
     }
 
-    override fun getItemCount(): Int = mValues.size
-
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
-        val mContentView: TextView = mView.content
-
-        override fun toString(): String {
-            return super.toString() + " '" + mContentView.text + "'"
-        }
+    fun addAll(newReviews: ArrayList<Review>) {
+        reviews.addAll(newReviews)
     }
+
+    fun addLoadingFooter() {
+        isLoadingAdded = true
+        reviews.add(
+            Review(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+        )
+    }
+
+    fun removeLoadingFooter() {
+        isLoadingAdded = false
+        val position = reviews.size - 1
+        reviews.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+
+    inner class SimpleViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+        val username: TextView = mView.findViewById(R.id.username)
+    }
+
+    inner class ImageViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+    }
+
+    inner class LoaderViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+    }
+
 }

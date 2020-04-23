@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.review_creation_activity.*
 import kotlin.math.roundToInt
 
 
-class CreationActivity : AppCompatActivity() {
+class ReviewCreationActivity : AppCompatActivity() {
 
     companion object {
         val RESTAURANT_ID_KEY: String = "RESTAURANT_ID_KEY"
@@ -33,13 +33,12 @@ class CreationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.review_creation_activity)
-        setSupportActionBar(action_bar.toolbar as Toolbar)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        setToolbar()
         if (!APIService.logged)
             throw RuntimeException("Creation activity need an authenticated access")
         restaurantId = intent.getStringExtra(RESTAURANT_ID_KEY)
             ?: throw RuntimeException("No restaurant ID passed to review creation activity")
+
         submit.setOnClickListener {
             sendForm()
         }
@@ -48,6 +47,11 @@ class CreationActivity : AppCompatActivity() {
         }
     }
 
+    private fun setToolbar() {
+        setSupportActionBar(action_bar.toolbar as Toolbar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
 
     private fun sendForm() {
         val reqId = restaurantId!!.toInt()
