@@ -2,6 +2,7 @@ package ca.ulaval.ima.mp.api
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import ca.ulaval.ima.mp.api.model.*
 import com.google.gson.Gson
 import com.google.gson.JsonElement
@@ -133,6 +134,7 @@ object APIService {
             .addQueryParameter("text", model.text.toString())
             .build()
 
+        Log.d("MP", "URL REQUEST " + url)
         val request: Request = Request.Builder()
             .url(url)
             .get()
@@ -241,10 +243,15 @@ object APIService {
         fun onResult(result: Result<T>)
     }
 
+    // Result can throw an error on the getResult method.
+    // 3 types of exceptions can be thrown :
+    // - CallFailureException = this exception is thrown when a http call failed. you can find a description of the error in e.wrapper.error.display like in the API nomenclature
+    // - AuthenticationFailureException = this exception is a subset of CallFailureException occurring when the http error code is 401
+    // - NotLoggedException = this exception is thrown when an authenticated http call is done before a login or register method was executed successfully
     class Result<T> {
         private var data: T? = null
-        private var authenticationFailuredException: AuthenticationFailuredException? = null
-        private var callFailuredException: CallFailureException? = null
+        private var authenticationFailureException: AuthenticationFailureException? = null
+        private var callFailureException: CallFailureException? = null
         private var notLoggedException: NotLoggedException? = null
 
         constructor(data: T) {
@@ -252,11 +259,11 @@ object APIService {
         }
 
         constructor(e: CallFailureException) {
-            callFailuredException = e
+            callFailureException = e
         }
 
-        constructor(e: AuthenticationFailuredException) {
-            authenticationFailuredException = e
+        constructor(e: AuthenticationFailureException) {
+            authenticationFailureException = e
         }
 
         constructor(e: NotLoggedException) {
@@ -265,8 +272,8 @@ object APIService {
 
         constructor(result: Result<*>) {
             notLoggedException = result.notLoggedException
-            authenticationFailuredException = result.authenticationFailuredException
-            callFailuredException = result.callFailuredException
+            authenticationFailureException = result.authenticationFailureException
+            callFailureException = result.callFailureException
         }
 
         fun isSuccessful(): Boolean {
@@ -274,12 +281,12 @@ object APIService {
         }
 
         fun getResult(): T {
-            if (callFailuredException != null)
-                throw callFailuredException!!
+            if (callFailureException != null)
+                throw callFailureException!!
             if (notLoggedException != null)
                 throw notLoggedException!!
-            if (authenticationFailuredException != null)
-                throw authenticationFailuredException!!
+            if (authenticationFailureException != null)
+                throw authenticationFailureException!!
             return data!!
         }
 
@@ -302,8 +309,10 @@ object APIService {
         var error: Error? = null
     }
 
+    //
     class NotLoggedException : Exception()
-    class AuthenticationFailuredException(val e: IOException?, val wrapper: ResponseWrapper?) :
+
+    class AuthenticationFailureException(val e: IOException?, val wrapper: ResponseWrapper?) :
         Exception()
 
     class CallFailureException(val e: IOException?, val wrapper: ResponseWrapper?) : Exception()
@@ -364,7 +373,7 @@ object APIService {
                     if (e.wrapper != null && e.wrapper.meta!!.status_code == 401)
                         return handler.handler.onResult(
                             Result(
-                                AuthenticationFailuredException(
+                                AuthenticationFailureException(
                                     e.e,
                                     e.wrapper
                                 )

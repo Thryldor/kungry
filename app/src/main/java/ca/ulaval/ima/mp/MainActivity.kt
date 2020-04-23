@@ -2,10 +2,7 @@ package ca.ulaval.ima.mp
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
 import androidx.appcompat.app.ActionBar
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,21 +11,23 @@ import androidx.navigation.ui.setupWithNavController
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.AccountLogin
+import ca.ulaval.ima.mp.api.model.RestaurantLight
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment
-import ca.ulaval.ima.mp.ui.restaurant.dummy.DummyContent
+import com.google.android.material.bottomnavigation.BottomNavigationView
+
 
 class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setupCustomActionBar();
+        setContentView(R.layout.main_activity)
+        setupCustomActionBar()
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.navigation_map, R.id.navigation_restaurants, R.id.navigation_profile))
+            R.id.navigation_map, R.id.navigation_restaurants, R.id.navigation_login))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navController.addOnDestinationChangedListener { _, _, _ ->
             APIService.login(
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
                         try {
                             val account = result.getResult()
                             Log.d("MP", account.email)
-                        } catch (e: APIService.AuthenticationFailuredException) {
+                        } catch (e: APIService.AuthenticationFailureException) {
                             Log.d("MP", e!!.wrapper!!.error!!.display)
                         }
                     });
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
         supportActionBar!!.setCustomView(R.layout.action_bar)
     }
 
-    override fun onRestaurantClick(item: DummyContent.DummyItem?) {
+    override fun onRestaurantClick(item: RestaurantLight?) {
         // TODO Implement
     }
 }
