@@ -61,6 +61,8 @@ class ReviewListActivity : AppCompatActivity(),
                 get() = isReviewsLoading
 
             override fun loadMoreItems() {
+                if (currentResult == null)
+                    return
                 isReviewsLoading = true
 
                 APIService.getRestaurantReviews(RestaurantGetReviewsRequest(
