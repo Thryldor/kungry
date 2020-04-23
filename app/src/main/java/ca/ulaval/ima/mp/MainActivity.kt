@@ -1,6 +1,5 @@
 package ca.ulaval.ima.mp
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -13,10 +12,7 @@ import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.AccountLogin
 import ca.ulaval.ima.mp.api.model.RestaurantLight
-import ca.ulaval.ima.mp.ui.map.MapFragment
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment
-import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationActivity
-import ca.ulaval.ima.mp.ui.review.list.ReviewListActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.action_bar.view.*
 import kotlinx.android.synthetic.main.review_creation_activity.*
