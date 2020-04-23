@@ -10,6 +10,11 @@
     <style name="KungryTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    <style name="KungryTheme.RatingBarSmall"
+        parent="android:style/Widget.Material.RatingBar.Small">
+        <item name="colorControlNormal">@color/star_gray</item>
+        <item name="colorControlActivated">@color/light_green</item>
+    </style>
     </style>
 
     <style name="KungryTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

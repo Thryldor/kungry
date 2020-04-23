@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="20dp"
+    android:background="@drawable/restaurant_list_item_border"
+    >
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:id="@+id/restaurant_logo" />
+    
+    <LinearLayout
+        android:paddingLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/restaurant_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lighter_black"
+            android:text="Default Restaurant Name"
+            android:textSize="16dp"
+            android:fontFamily="@font/sf_ui_heavy"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/restaurant_type"
+            android:textColor="@color/lighter_black"
+            android:text="Snack/Food • Confort food"
+            android:textSize="12dp"
+            android:fontFamily="@font/sf_ui_light" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RatingBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:rating="5"
+                    style="@style/KungryTheme.RatingBarSmall"
+                    android:id="@+id/restaurant_reviews"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/restaurant_review_count"
+                    android:text="(351)"
+                    android:paddingLeft="3dp"
+                    android:paddingTop="1dp"
+                    android:textSize="12dp"
+                    android:fontFamily="@font/sf_ui_light" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5.5km"
+                    android:fontFamily="@font/sf_ui_light"
+                    android:textSize="12dp"
+                    android:textColor="@color/lighter_black"
+                    android:layout_marginBottom="5dp"
+                    android:drawableLeft="@drawable/ic_icon_pin"
+                    android:id="@+id/restaurant_dist" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
