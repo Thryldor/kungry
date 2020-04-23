@@ -40,13 +40,15 @@ class RestaurantListFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.show()
 
         if (view is RecyclerView) {
-            getLocation()
+            // getLocation()
             with(view) {
                 layoutManager = LinearLayoutManager(context)
                 APIService.searchRestaurant(
                     RestaurantsSearchRequest(
-                        latitude = currentLocation.latitude,
-                        longitude = currentLocation.longitude,
+//                        latitude = currentLocation.latitude,
+//                        longitude = currentLocation.longitude,
+                        latitude = 46.829853,
+                        longitude = -71.254028,
                         page = 1,
                         page_size = 5,
                         radius = 20,
