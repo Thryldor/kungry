@@ -12,18 +12,58 @@ import ca.ulaval.ima.mp.api.model.Review
 
 class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val REVIEW_WITH_IMAGE = 0
-    private val REVIEW_WITHOUT_IMAGE = 1
-    private val LOADER = 2
+    private val HEADER = 0
+    private val REVIEW_WITH_IMAGE = 1
+    private val REVIEW_WITHOUT_IMAGE = 2
+    private val LOADER = 3
 
     private var isLoadingAdded = false
     private val reviews: ArrayList<Review> = ArrayList()
 
+    init {
+        reviews.add(
+            Review(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+        )
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            LOADER ->  LoaderViewHolder(inflater.inflate(R.layout.review_list_loading_item_fragment, parent, false))
-            REVIEW_WITHOUT_IMAGE -> SimpleViewHolder(inflater.inflate(R.layout.review_list_item_fragment, parent, false))
+            HEADER -> HeaderViewHolder(
+                inflater.inflate(
+                    R.layout.review_list_item_loading_fragment,
+                    parent,
+                    false
+                )
+            )
+            LOADER -> LoaderViewHolder(
+                inflater.inflate(
+                    R.layout.review_list_item_loading_fragment,
+                    parent,
+                    false
+                )
+            )
+            REVIEW_WITHOUT_IMAGE -> SimpleViewHolder(
+                inflater.inflate(
+                    R.layout.review_list_item_fragment,
+                    parent,
+                    false
+                )
+            )
+            REVIEW_WITH_IMAGE -> ImageViewHolder(
+                inflater.inflate(
+                    R.layout.review_list_item_fragment,
+                    parent,
+                    false
+                )
+            )
             else -> throw RuntimeException("Invalid view holder type")
         }
     }
@@ -38,7 +78,14 @@ class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == reviews.size - 1 && isLoadingAdded) LOADER else REVIEW_WITHOUT_IMAGE
+        return if (position == 0)
+            HEADER
+        else if (position == reviews.size - 1 && isLoadingAdded)
+            LOADER
+        else if (reviews[position].image == null)
+            REVIEW_WITHOUT_IMAGE
+        else
+            REVIEW_WITH_IMAGE
     }
 
     fun addAll(newReviews: ArrayList<Review>) {
@@ -66,6 +113,8 @@ class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyItemRemoved(position)
     }
 
+    inner class HeaderViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+    }
 
     inner class SimpleViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val username: TextView = mView.findViewById(R.id.username)

@@ -9,8 +9,6 @@
         android:name="ca.ulaval.ima.mp.ui.review.list.ReviewFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context=".ui.review.list.ReviewListFragment"
         tools:listitem="@layout/review_list_item_fragment" />
