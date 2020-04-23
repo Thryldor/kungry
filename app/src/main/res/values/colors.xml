@@ -7,7 +7,7 @@
     <color name="star_gray">#DADADA</color>
     <color name="light_grey">#BFBFBF</color>
     <color name="light_grey_snackbar">#CFCFCF</color>
+    <color name="border_color">#CCCCCC</color>
     <color name="light_green">#23D25B</color>
     <color name="darker_green">#17B449</color>
-    <color name="border_color">#CCCCCC</color>
 </resources>

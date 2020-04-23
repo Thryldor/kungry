@@ -4,6 +4,8 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -12,6 +14,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -21,13 +24,13 @@ import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.RestaurantLight
 import ca.ulaval.ima.mp.api.model.RestaurantsSearchRequest
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.*
 
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, LocationListener {
     private val LOCATION_FINE_CODE = 123;
+
+    private lateinit var mLayoutInfo: FrameLayout
 
     private lateinit var mMapView: MapView
     private lateinit var mMap: GoogleMap
@@ -35,7 +38,12 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     private lateinit var mManager: FragmentManager
     private lateinit var mLocation: LocationManager
 
-    private lateinit var mRestaurants: ArrayList<RestaurantLight>
+    private var mSelectedRestaurant: RestaurantLight? = null
+    private var mRestaurants: ArrayList<RestaurantLight> = ArrayList()
+
+    private var mMarker: Marker? = null
+    private lateinit var mPin: Bitmap
+    private lateinit var mSelectedPin: Bitmap
 
     companion object {
         fun newInstance() = MapFragment()
@@ -47,14 +55,24 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.map_fragment, container, false)
+        mLayoutInfo = v.findViewById(R.id.fragment_container)
+        setupLayoutClickable()
         mMapView = v.findViewById(R.id.map)
         mMapView.onCreate(savedInstanceState)
         mMapView.onResume()
 
+        val pin = context!!.assets.open("pin.bmp")
+        val pinBitmap = BitmapFactory.decodeStream(pin)
+        mPin = Bitmap.createScaledBitmap(pinBitmap, 75, 90, false)
+
+        val selectPin = context!!.assets.open("pin_selected.bmp")
+        val selectPinBitmap = BitmapFactory.decodeStream(selectPin)
+        mSelectedPin = Bitmap.createScaledBitmap(selectPinBitmap, 120, 150, false)
+
         mManager = activity!!.supportFragmentManager
 
         mManager.beginTransaction()
-            .add(R.id.restaurant_info, RestaurantInfoFragment())
+            .add(R.id.fragment_container, RestaurantInfoFragment())
             .commit()
 
         try {
@@ -63,15 +81,26 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
             e.printStackTrace()
         }
 
-        mLocation = activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         mMapView.getMapAsync(this)
-        mLocation.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0F, this)
+
         return v
+    }
+
+    private fun setupLayoutClickable() {
+        mLayoutInfo.setOnClickListener {
+            run {
+                // TODO Changer de vue, le restaurant sélectionné est dispo dans mSelectedRestaurant
+                if (mSelectedRestaurant != null) {
+                    Log.d("APP", "Click sur le layout")
+                }
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style))
+        mMap.setOnMarkerClickListener(this)
 
         if (ContextCompat.checkSelfPermission(
                 context!!,
@@ -79,6 +108,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             mMap.isMyLocationEnabled = true
+            mLocation = activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            mLocation.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0F, this)
+
         } else {
             val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
             requestPermissions(permissions, LOCATION_FINE_CODE)
@@ -100,43 +132,59 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             mMap.isMyLocationEnabled = true
+            mLocation = activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            mLocation.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0F, this)
         }
     }
 
-    fun refreshMapMarker() {
+    private fun updateRestaurantInfo(restaurantLight: RestaurantLight?) {
+        val bundle = Bundle().apply {
+            putString("title", restaurantLight?.name)
+            putString("description", restaurantLight?.type)
+            putString("imageLink", restaurantLight?.image)
+            putString("distance", restaurantLight?.distance)
+            putString("reviewAverage", restaurantLight?.review_average.toString())
+            putInt("reviewCount", restaurantLight?.review_count!!)
+        }
+
+        val fragment = RestaurantInfoSelectFragment()
+        fragment.arguments = bundle
+        val transaction = mManager.beginTransaction().apply {
+            replace(R.id.fragment_container, fragment)
+        }
+        transaction.commit()
+    }
+
+    private fun refreshMapMarker() {
         for (restaurant in mRestaurants) {
-            Log.d("APP", restaurant.toString())
-/*
-            val latLng = LatLng(restaurant.location?.get(0)!!.toDouble(), restaurant.location[1].toDouble())
-            mMap.addMarker(MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin))
-                .position(latLng)
+            val latLng = LatLng(restaurant.location!!.latitude!!, restaurant.location.longitude!!)
+
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(latLng)
+                    .icon(BitmapDescriptorFactory.fromBitmap(mPin))
+                    .title(restaurant.id.toString())
             )
-*/
         }
     }
 
-    fun fetchRestaurantsInProximity(latitude: Double, longitude: Double) {
+    private fun fetchRestaurantsInProximity(latitude: Double, longitude: Double) {
         val searchRestaurantParam = RestaurantsSearchRequest(
             page = 1,
             page_size = 20,
             latitude = latitude,
             longitude = longitude,
-            radius = 10,
+            radius = 5,
             text = ""
         )
 
         APIService.searchRestaurant(searchRestaurantParam, createHandler { result ->
-            Log.d("App", result.toString())
             try {
                 mRestaurants = result.getResult().results
             } catch (e: APIService.CallFailureException) {
-
+                e.printStackTrace()
             }
-/*
-            mRestaurants = result.getResult().results
             refreshMapMarker()
-*/
         })
     }
 
@@ -164,27 +212,37 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         // TODO Décommenter pour rendu
         // val latLng = LatLng(location!!.latitude, location.longitude)
         val latLng = LatLng(46.829853, -71.254028)
-        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15f)
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13f)
         mMap.animateCamera(cameraUpdate)
         mLocation.removeUpdates(this)
         fetchRestaurantsInProximity(46.829853, -71.254028)
     }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
-        // TODO Not yet implement
-        return false
+        if (mMarker != null && p0!! != mMarker) {
+            mMarker?.setIcon(BitmapDescriptorFactory.fromBitmap(mPin))
+            p0.setIcon(BitmapDescriptorFactory.fromBitmap(mSelectedPin))
+            val restaurantLight = mRestaurants.find { restaurant -> restaurant.id.toString() == p0!!.title }
+            mSelectedRestaurant = restaurantLight
+            updateRestaurantInfo(restaurantLight)
+            mMarker = p0
+        } else {
+            p0?.setIcon(BitmapDescriptorFactory.fromBitmap(mSelectedPin))
+            val restaurantLight = mRestaurants.find { restaurant -> restaurant.id.toString() == p0!!.title }
+            mSelectedRestaurant = restaurantLight
+            updateRestaurantInfo(restaurantLight)
+            mMarker = p0
+        }
+        return true
     }
 
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-        // TODO Not yet implement
     }
 
     override fun onProviderEnabled(provider: String?) {
-        // TODO Not yet implement
     }
 
     override fun onProviderDisabled(provider: String?) {
-        // TODO Not yet implement
     }
 
 }

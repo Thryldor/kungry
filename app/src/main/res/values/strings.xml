@@ -30,8 +30,5 @@
 
     <string name="snackbar_title">Un petit creux?</string>
     <string name="snackbar_description">Sélectionnez une épingle afin d\'obtenir plus de détails sur ce restaurant.</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
 

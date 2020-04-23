@@ -37,8 +37,8 @@ class RestaurantListFragment : Fragment() {
                 layoutManager = LinearLayoutManager(context)
                 APIService.searchRestaurant(
                     RestaurantsSearchRequest(
-                        latitude = 40,
-                        longitude = -70,
+                        latitude = 40.0,
+                        longitude = -70.0,
                         page = 1,
                         page_size = 20,
                         radius = 5000,
@@ -67,7 +67,7 @@ class RestaurantListFragment : Fragment() {
         if (context is OnRestaurantListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnListFragmentInteractionListener")
         }
     }
 
