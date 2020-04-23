@@ -23,6 +23,7 @@ import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.RestaurantLight
 import ca.ulaval.ima.mp.api.model.RestaurantsSearchRequest
+import ca.ulaval.ima.mp.ui.restaurant.RestaurantMapFragment
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 
@@ -74,7 +75,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         mManager.beginTransaction()
             .add(R.id.fragment_container, RestaurantInfoFragment())
             .commit()
-
+        
         try {
             MapsInitializer.initialize(activity!!.applicationContext)
         } catch (e: Exception) {
