@@ -48,10 +48,10 @@
                 android:orientation="horizontal" >
 
                 <RatingBar
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:rating="5"
-                    style="@style/KungryTheme.RatingBarSmall"
+                    style="?android:attr/ratingBarStyleSmall"
                     android:id="@+id/restaurant_reviews"/>
 
                 <TextView
