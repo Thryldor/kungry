@@ -1,6 +1,11 @@
 package ca.ulaval.ima.mp.ui.restaurant
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
@@ -20,10 +26,11 @@ import java.lang.Exception
 
 class RestaurantListFragment : Fragment() {
 
-    // TODO: Customize parameters
-    private var columnCount = 1
+    private val LOCATION_FINE_CODE = 123;
 
     private var listener: OnRestaurantListener? = null
+    private lateinit var mLocation: LocationManager
+    private lateinit var currentLocation: Location
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,15 +40,16 @@ class RestaurantListFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.show()
 
         if (view is RecyclerView) {
+            getLocation()
             with(view) {
                 layoutManager = LinearLayoutManager(context)
                 APIService.searchRestaurant(
                     RestaurantsSearchRequest(
-                        latitude = 40.0,
-                        longitude = -70.0,
+                        latitude = currentLocation.latitude,
+                        longitude = currentLocation.longitude,
                         page = 1,
-                        page_size = 20,
-                        radius = 5000,
+                        page_size = 10,
+                        radius = 10,
                         text = ""), createHandler { result ->
                         try {
                             val list: ArrayList<RestaurantLight> = result.getResult().results
@@ -61,6 +69,30 @@ class RestaurantListFragment : Fragment() {
         }
         return view
     }
+
+    fun getLocation() {
+        if (ContextCompat.checkSelfPermission(
+                context!!,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            mLocation = activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+       //     mLocation.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0F, locationListener)
+            currentLocation = mLocation.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
+        } else {
+            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+            requestPermissions(permissions, LOCATION_FINE_CODE)
+        }
+    }
+
+    /*private val locationListener: LocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            currentLocation = location
+        }
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+        override fun onProviderEnabled(provider: String) {}
+        override fun onProviderDisabled(provider: String) {}
+    }*/
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

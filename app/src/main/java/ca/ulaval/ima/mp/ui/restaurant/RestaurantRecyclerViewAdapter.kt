@@ -43,7 +43,7 @@ class RestaurantRecyclerViewAdapter(
         holder.mNameView.text = item.name
         holder.mTypeView.text = "Snack/Food • Confort food"
         holder.mNbevalView.text = item.review_count.toString()
-        holder.mDistView.text = item.distance
+        holder.mDistView.text = "${item.distance}km"
         holder.mRatingBar.rating = item.review_average!!
         Picasso.with(holder.mLogoView.context)
             .load(item.image)
