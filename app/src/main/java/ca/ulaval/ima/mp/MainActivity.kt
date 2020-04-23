@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
         navView.setupWithNavController(navController)
     }
 
-    fun setupCustomActionBar() {
+    private fun setupCustomActionBar() {
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar!!.setCustomView(R.layout.action_bar)
     }

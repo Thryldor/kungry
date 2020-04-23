@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.map.RestaurantInfoSelectFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/restaurant_border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/snackbar_restaurant_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/snackbar_restaurant_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="L'affaire est ketchup!"
+            android:textSize="16sp"
+            android:textColor="@color/black_snackbar"
+            android:fontFamily="@font/sf_ui_display_heavy"
+            app:layout_constraintStart_toEndOf="@+id/snackbar_restaurant_image"
+            app:layout_constraintTop_toTopOf="@+id/snackbar_restaurant_image" />
+
+        <TextView
+            android:id="@+id/snackbar_restaurant_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:textColor="@color/black_snackbar"
+            android:fontFamily="@font/sf_ui_display_light"
+            android:text="Snack/Food - Confort food"
+            app:layout_constraintStart_toStartOf="@+id/snackbar_restaurant_title"
+            app:layout_constraintTop_toBottomOf="@+id/snackbar_restaurant_title" />
+
+        <RatingBar
+            android:id="@+id/snackbar_restaurant_rating"
+            style="@style/KungryTheme.RatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="0.5"
+            android:scaleY="0.5"
+            android:stepSize="1"
+            app:layout_constraintStart_toStartOf="@+id/snackbar_restaurant_description"
+            app:layout_constraintTop_toBottomOf="@+id/snackbar_restaurant_description" />
+
+        <TextView
+            android:id="@+id/snackbar_restaurant_eval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/black_snackbar"
+            android:fontFamily="@font/sf_ui_display_light"
+            android:text="(351)"
+            app:layout_constraintBottom_toBottomOf="@+id/snackbar_restaurant_rating"
+            app:layout_constraintStart_toEndOf="@+id/snackbar_restaurant_rating"
+            app:layout_constraintTop_toTopOf="@+id/snackbar_restaurant_rating" />
+
+        <ImageView
+            android:id="@+id/snackbar_restaurant_distance"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:src="@drawable/ic_pin"
+            app:layout_constraintBottom_toBottomOf="@+id/snackbar_restaurant_km"
+            app:layout_constraintEnd_toStartOf="@+id/snackbar_restaurant_km"
+            app:layout_constraintTop_toTopOf="@+id/snackbar_restaurant_km" />
+
+        <TextView
+            android:id="@+id/snackbar_restaurant_km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/sf_ui_display_light"
+            android:text="5 km"
+            android:textColor="@color/black_snackbar"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

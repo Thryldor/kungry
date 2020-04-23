@@ -6,6 +6,15 @@
         <item name="android:background">@color/black</item>
     </style>
 
+    <style name="KungryTheme.RatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/ic_grade</item>
+        <item name="colorControlNormal">@color/light_grey_snackbar</item>
+        <item name="colorControlActivated">@color/light_green</item>
+        <item name="android:minHeight">22dp</item>
+        <item name="android:maxHeight">22dp</item>
+        <item name="android:numStars">5</item>
+    </style>
+
     <style name="KungryTheme" parent="Theme.AppCompat.Light">
     </style>
 </resources>
