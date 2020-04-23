@@ -48,8 +48,8 @@ class RestaurantListFragment : Fragment() {
                         latitude = currentLocation.latitude,
                         longitude = currentLocation.longitude,
                         page = 1,
-                        page_size = 10,
-                        radius = 10,
+                        page_size = 5,
+                        radius = 20,
                         text = ""), createHandler { result ->
                         try {
                             val list: ArrayList<RestaurantLight> = result.getResult().results

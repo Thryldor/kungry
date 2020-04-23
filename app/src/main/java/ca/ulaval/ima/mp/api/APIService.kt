@@ -134,7 +134,6 @@ object APIService {
             .addQueryParameter("text", model.text.toString())
             .build()
 
-        Log.d("MP", "URL REQUEST " + url)
         val request: Request = Request.Builder()
             .url(url)
             .get()
