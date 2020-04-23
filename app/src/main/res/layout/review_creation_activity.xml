@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FAFAFA"
-    tools:context=".ui.review.CreationActivity">
+    tools:context=".ui.review.creation.CreationActivity">
 
     <include
         android:id="@+id/action_bar"

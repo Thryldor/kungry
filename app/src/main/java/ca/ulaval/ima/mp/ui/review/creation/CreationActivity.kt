@@ -1,9 +1,7 @@
-package ca.ulaval.ima.mp.ui.review
+package ca.ulaval.ima.mp.ui.review.creation
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -19,7 +17,7 @@ import ca.ulaval.ima.mp.api.model.Review
 import ca.ulaval.ima.mp.api.model.Upload
 import ca.ulaval.ima.mp.tools.RoundCornerDrawable
 import kotlinx.android.synthetic.main.action_bar.view.*
-import kotlinx.android.synthetic.main.evaluation_creation_activity.*
+import kotlinx.android.synthetic.main.review_creation_activity.*
 import kotlin.math.roundToInt
 
 
@@ -34,7 +32,7 @@ class CreationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.evaluation_creation_activity)
+        setContentView(R.layout.review_creation_activity)
         setSupportActionBar(action_bar.toolbar as Toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)

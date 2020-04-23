@@ -1,24 +1,17 @@
 package ca.ulaval.ima.mp
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import ca.ulaval.ima.mp.api.APIService
-import ca.ulaval.ima.mp.api.createHandler
-import ca.ulaval.ima.mp.api.model.AccountLogin
-import ca.ulaval.ima.mp.ui.review.CreationActivity
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment
 import ca.ulaval.ima.mp.ui.restaurant.dummy.DummyContent
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.action_bar.view.*
-import kotlinx.android.synthetic.main.evaluation_creation_activity.*
+import kotlinx.android.synthetic.main.review_creation_activity.*
 
 
 class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantListener {
@@ -38,7 +31,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navController.addOnDestinationChangedListener { _, _, _ ->
-//            APIService.login(
+            //            APIService.login(
 //                AccountLogin(
 //                    email = "cedric.thomas.1@ulaval.ca",
 //                    password = "CedricThomas42"
