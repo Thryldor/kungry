@@ -2,8 +2,9 @@ package ca.ulaval.ima.mp.ui.review
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,8 +17,10 @@ import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.CreateReview
 import ca.ulaval.ima.mp.api.model.Review
 import ca.ulaval.ima.mp.api.model.Upload
+import ca.ulaval.ima.mp.tools.RoundCornerDrawable
 import kotlinx.android.synthetic.main.action_bar.view.*
 import kotlinx.android.synthetic.main.evaluation_creation_activity.*
+import kotlin.math.roundToInt
 
 
 class CreationActivity : AppCompatActivity() {
@@ -27,7 +30,7 @@ class CreationActivity : AppCompatActivity() {
     }
 
     private var restaurantId: String? = null
-    private var bitmaps: ArrayList<Bitmap> = ArrayList()
+    private var bitmap: Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +45,7 @@ class CreationActivity : AppCompatActivity() {
         submit.setOnClickListener {
             sendForm()
         }
-        add_image.setOnClickListener {
+        card_view.setOnClickListener {
             UploadService.choose(this)
         }
     }
@@ -68,27 +71,35 @@ class CreationActivity : AppCompatActivity() {
         try {
             review = res.getResult()
         } catch (e: APIService.CallFailureException) {
-            Toast.makeText(MiniProject.appContext, "Review creation error : " + e.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                MiniProject.appContext,
+                "Review creation error : " + e.wrapper!!.error!!.display,
+                Toast.LENGTH_LONG
+            ).show()
             return
         }
-        if (bitmaps.size > 0)
+        if (bitmap != null)
             attachBitmaps(review)
-        finish()
+        else
+            finish()
     }
 
     private fun attachBitmaps(review: Review) {
-        for (bitmap in bitmaps) {
-            APIService.attachImageToReview(Upload(
-                review.id!!,
-                bitmap
-            ), createHandler {res ->
-                try {
-                    res.getResult()
-                } catch (e: APIService.CallFailureException) {
-                    Toast.makeText(MiniProject.appContext,  "Image upload error : " + e.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
-                }
-            })
-        }
+        APIService.attachImageToReview(Upload(
+            review.id!!,
+            bitmap!!
+        ), createHandler { res ->
+            try {
+                res.getResult()
+            } catch (e: APIService.CallFailureException) {
+                Toast.makeText(
+                    this,
+                    "Image upload error : " + e.wrapper!!.error!!.display,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            finish();
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -103,9 +114,19 @@ class CreationActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val bitmap = UploadService.extractBitmapFromResult(requestCode, resultCode, data)
-        if (bitmap != null)
-            bitmaps.add(bitmap)
+        bitmap = UploadService.extractBitmapFromResult(requestCode, resultCode, data)
+        if (bitmap != null) {
+            val round = RoundCornerDrawable(
+                Bitmap.createScaledBitmap(
+                    bitmap!!,
+                    resources.getDimension(R.dimen.form_card_view_dim).roundToInt(),
+                    resources.getDimension(R.dimen.form_card_view_dim).roundToInt(),
+                    false
+                ),
+                resources.getDimension(R.dimen.image_corner_radius)
+            )
+            image_view.setImageDrawable(round)
+        }
     }
 
 }

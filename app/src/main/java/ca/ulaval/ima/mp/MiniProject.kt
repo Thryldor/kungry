@@ -2,8 +2,7 @@ package ca.ulaval.ima.mp
 
 import android.app.Application
 import android.content.Context
-import android.widget.Toast
-
+import android.graphics.*
 
 /**
  * static class allowing to access to the application context and toasting with  the application context
@@ -22,6 +21,7 @@ class MiniProject : Application() {
          */
         var appContext: Context? = null
             private set
+
     }
 
 }

@@ -3,6 +3,7 @@ package ca.ulaval.ima.mp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
                             val account = result.getResult()
                             Log.d("MP", account!!.email)
                         } catch (e: APIService.AuthenticationFailureException) {
-                            Log.d("MP", e!!.wrapper!!.error!!.display)
+                            Toast.makeText(this, e!!.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
                         }
                         val intent = Intent(this, CreationActivity::class.java).apply {
                             putExtra(CreationActivity.RESTAURANT_ID_KEY, "1")
