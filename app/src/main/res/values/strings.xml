@@ -26,5 +26,9 @@
     <string name="register_button">M\'inscrire</string>
     <string name="title_notifications">Notifications</string>
     <string name="logo_kungry">Logo Kungry</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="snackbar_title">Un petit creux?</string>
+    <string name="snackbar_description">Sélectionnez une épingle afin d\'obtenir plus de détails sur ce restaurant.</string>
 </resources>
 

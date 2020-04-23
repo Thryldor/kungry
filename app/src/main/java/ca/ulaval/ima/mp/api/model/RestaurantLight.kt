@@ -9,5 +9,5 @@ data class RestaurantLight(
     val review_average : Float?,
     val image : String?,
     val distance : String?,
-    val location : String?
+    val location : Location?
 )

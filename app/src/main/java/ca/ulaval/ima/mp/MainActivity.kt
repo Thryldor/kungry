@@ -11,8 +11,8 @@ import androidx.navigation.ui.setupWithNavController
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.AccountLogin
+import ca.ulaval.ima.mp.api.model.RestaurantLight
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment
-import ca.ulaval.ima.mp.ui.restaurant.dummy.DummyContent
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -49,12 +49,12 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
         navView.setupWithNavController(navController)
     }
 
-    fun setupCustomActionBar() {
+    private fun setupCustomActionBar() {
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar!!.setCustomView(R.layout.action_bar)
     }
 
-    override fun onRestaurantClick(item: DummyContent.DummyItem?) {
+    override fun onRestaurantClick(item: RestaurantLight?) {
         // TODO Implement
     }
 }
