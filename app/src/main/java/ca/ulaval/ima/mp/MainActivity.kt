@@ -38,25 +38,25 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navController.addOnDestinationChangedListener { _, _, _ ->
-            APIService.login(
-                AccountLogin(
-                    email = "cedric.thomas.1@ulaval.ca",
-                    password = "CedricThomas42"
-                ), createHandler { result ->
-                    val tokenInfo = result.getResult()
-                    APIService.me(createHandler { result ->
-                        try {
-                            val account = result.getResult()
-                            Log.d("MP", account!!.email)
-                        } catch (e: APIService.AuthenticationFailureException) {
-                            Toast.makeText(this, e!!.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
-                        }
-                        val intent = Intent(this, CreationActivity::class.java).apply {
-                            putExtra(CreationActivity.RESTAURANT_ID_KEY, "1")
-                        }
-                        startActivity(intent)
-                    });
-                })
+//            APIService.login(
+//                AccountLogin(
+//                    email = "cedric.thomas.1@ulaval.ca",
+//                    password = "CedricThomas42"
+//                ), createHandler { result ->
+//                    val tokenInfo = result.getResult()
+//                    APIService.me(createHandler { result ->
+//                        try {
+//                            val account = result.getResult()
+//                            Log.d("MP", account!!.email)
+//                        } catch (e: APIService.AuthenticationFailureException) {
+//                            Toast.makeText(this, e!!.wrapper!!.error!!.display, Toast.LENGTH_LONG).show()
+//                        }
+//                        val intent = Intent(this, CreationActivity::class.java).apply {
+//                            putExtra(CreationActivity.RESTAURANT_ID_KEY, "1")
+//                        }
+//                        startActivity(intent)
+//                    });
+//                })
 
         }
         navView.setupWithNavController(navController)
