@@ -1,13 +1,16 @@
 package ca.ulaval.ima.mp.api
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import ca.ulaval.ima.mp.MiniProject
 import ca.ulaval.ima.mp.api.model.*
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import okhttp3.*
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.lang.reflect.Type
 import java.util.*
@@ -25,7 +28,8 @@ object APIService {
     private val gson: Gson = Gson()
     private var logging_timestamp: Long? = null
     private var token: TokenOutput? = null
-    private var logged = false
+    var logged = false
+        private set
 
     // Account
 
@@ -161,14 +165,16 @@ object APIService {
         executeRequest(request, handler, type)
     }
 
-    fun getRestaurantReviews(id: Int, handler: ResponseHandler<PaginationResult<Review>>) {
+    fun getRestaurantReviews(model: RestaurantGetReviewsRequest, handler: ResponseHandler<PaginationResult<Review>>) {
         val url = HttpUrl.Builder()
             .scheme(SCHEME)
             .host(HOST)
             .addPathSegment(BASE_PATH)
             .addPathSegment("restaurant")
-            .addPathSegment(id.toString())
+            .addPathSegment(model.id.toString())
             .addPathSegment("reviews")
+            .addQueryParameter("page", model.page.toString())
+            .addQueryParameter("page_size", model.page_size.toString())
             .build()
 
         val request: Request = Request.Builder()
@@ -226,10 +232,46 @@ object APIService {
         })
     }
 
-    fun attachImageToReview() {
-//    POST
-//    /review/{id}/image/
-//    review_image
+    fun attachImageToReview(
+        upload: Upload,
+        handler: ResponseHandler<Review>
+    ) {
+        executeAuthenticatedCall(object : AuthResponseHandler<Review>(handler) {
+            override fun onAuthResult(
+                result: Result<String>,
+                customHandler: ResponseHandler<Review>
+            ) {
+                if (!result.isSuccessful())
+                    return customHandler.onResult(Result(result))
+                val authToken = result.getResult()
+
+                val url = HttpUrl.Builder()
+                    .scheme(SCHEME)
+                    .host(HOST)
+                    .addPathSegment(BASE_PATH)
+                    .addPathSegment("review")
+                    .addPathSegment(upload.id.toString())
+                    .addPathSegment("image")
+                    .build()
+
+                val body = MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart(
+                        "image", "image.jpg",
+                        bitmapToBody(upload.file)
+                    )
+                    .build()
+
+                val request: Request = Request.Builder()
+                    .url(url)
+                    .addHeader("Authorization", "Bearer $authToken")
+                    .post(body)
+                    .build()
+                val type = object : TypeToken<Review>() {}.type
+                executeRequest(request, customHandler, type)
+            }
+
+        })
     }
 
 // APIService types
@@ -402,6 +444,20 @@ object APIService {
             }
 
         }, type)
+    }
+
+    /**
+     * Convert an image in request body
+     * @param bmp: image to put in boy
+     * @return request body for an image upload
+     */
+    private fun bitmapToBody(bmp: Bitmap): RequestBody {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        return RequestBody.create(
+            MediaType.parse("image/*jpg"),
+            byteArrayOutputStream.toByteArray()
+        )
     }
 
 }
