@@ -15,6 +15,8 @@ import ca.ulaval.ima.mp.api.model.RestaurantGetReviewsRequest
 import ca.ulaval.ima.mp.api.model.Review
 import ca.ulaval.ima.mp.tools.PaginationScrollListener
 import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationActivity
+import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationLoginPopupFragment
+import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationPopupFragment
 import kotlinx.android.synthetic.main.action_bar.view.*
 import kotlinx.android.synthetic.main.review_list_activity.*
 import kotlinx.android.synthetic.main.review_list_fragment.*
@@ -51,6 +53,15 @@ class ReviewListActivity : AppCompatActivity(),
                 ).show()
             }
         })
+        if (APIService.logged) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.popup, ReviewCreationPopupFragment.newInstance(restaurantId!!.toInt()))
+                .commitNow();
+        } else {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.popup, ReviewCreationLoginPopupFragment.newInstance())
+                .commitNow();
+        }
     }
 
     private fun setToolbar() {

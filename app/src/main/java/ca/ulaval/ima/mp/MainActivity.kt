@@ -42,13 +42,12 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
                     email = "cedric.thomas.1@ulaval.ca",
                     password = "CedricThomas42"
                 ), createHandler { result ->
-                    Log.d("LOGIN_TOKEN", result.getResult().refresh_token!!)
-                });
+                    val intent = Intent(this, ReviewListActivity::class.java).apply {
+                        putExtra(ReviewListActivity.RESTAURANT_ID_KEY, "1")
+                    }
+                    startActivity(intent)
 
-            val intent = Intent(this, ReviewListActivity::class.java).apply {
-                putExtra(ReviewListActivity.RESTAURANT_ID_KEY, "1")
-            }
-            startActivity(intent)
+                });
         }
         navView.setupWithNavController(navController)
     }
