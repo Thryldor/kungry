@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.model.Review
@@ -63,7 +62,7 @@ class ReviewRecyclerViewAdapter(val context: Context, private val maxReviews: In
             )
             LOADER -> LoaderViewHolder(
                 inflater.inflate(
-                    R.layout.review_list_item_loading_fragment,
+                    R.layout.recyclerview_item_loading_fragment,
                     parent,
                     false
                 )
