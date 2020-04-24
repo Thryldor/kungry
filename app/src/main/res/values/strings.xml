@@ -28,24 +28,26 @@
     <string name="logo_kungry">Logo Kungry</string>
 
     <!--    Review creation-->
-    <string name="review_creaton_submit">SOUMETTRE</string>
-    <string name="review_creaton_rate_title">Évaluation</string>
-    <string name="review_creaton_comment_title">Commentaire</string>
-    <string name="review_creaton_photo_title">Ajouter une photo</string>
-    <string name="review_creaton_falcultative">(Facultatif)</string>
+    <string name="review_creation_submit">SOUMETTRE</string>
+    <string name="review_creation_rate_title">Évaluation</string>
+    <string name="review_creation_comment_title">Commentaire</string>
+    <string name="review_creation_photo_title">Ajouter une photo</string>
+    <string name="review_creation_falcultative">(Facultatif)</string>
     <string name="title_activity_review_list">ReviewListActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!--    Review creation popup-->
+    <string name="review_creation_login_popup_button">CONNEXION</string>
+    <string name="review_creation_login_popup_text">Pour laisser une évaluation , connectez-vous.</string>
+    <string name="review_creation_popup_button">Laisser une évaluation</string>
+
+    <!--    Review list-->
+    <string name="review_list_title">Évaluations</string>
+
 
     <string name="title_activity_maps">Map</string>
 
     <string name="snackbar_title">Un petit creux?</string>
     <string name="snackbar_description">Sélectionnez une épingle afin d\'obtenir plus de détails sur ce restaurant.</string>
+
 </resources>
 

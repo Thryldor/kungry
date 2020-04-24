@@ -12,6 +12,12 @@
         <item name="colorControlActivated">@color/light_green</item>
     </style>
 
+    <style name="KungryTheme.RatingBarMedium" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/review_list_ratingbar</item>
+        <item name="android:minHeight">16dp</item>
+        <item name="android:maxHeight">16dp</item>
+    </style>
+
     <style name="KungryTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -20,5 +26,9 @@
     <style name="KungryTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="KungryTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="KungryTheme.ProgressBar" parent="KungryTheme">
+        <item name="colorAccent">@color/light_green</item>
+    </style>
 
 </resources>

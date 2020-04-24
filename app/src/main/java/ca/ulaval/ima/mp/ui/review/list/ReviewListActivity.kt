@@ -15,6 +15,8 @@ import ca.ulaval.ima.mp.api.model.RestaurantGetReviewsRequest
 import ca.ulaval.ima.mp.api.model.Review
 import ca.ulaval.ima.mp.tools.PaginationScrollListener
 import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationActivity
+import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationLoginPopupFragment
+import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationPopupFragment
 import kotlinx.android.synthetic.main.action_bar.view.*
 import kotlinx.android.synthetic.main.review_list_activity.*
 import kotlinx.android.synthetic.main.review_list_fragment.*
@@ -37,9 +39,29 @@ class ReviewListActivity : AppCompatActivity(),
         setToolbar()
         restaurantId = intent.getStringExtra(ReviewCreationActivity.RESTAURANT_ID_KEY)
             ?: throw RuntimeException("No restaurant ID passed to review list activity")
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, ReviewListFragment.newInstance())
-            .commitNow();
+        APIService.getRestaurantById(restaurantId?.toInt()!!, createHandler {resp ->
+            try {
+                val res = resp.getResult()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, ReviewListFragment.newInstance(res.review_count!!))
+                    .commitNow();
+            } catch (e: APIService.CallFailureException) {
+                Toast.makeText(
+                    MiniProject.appContext,
+                    e.wrapper?.error?.display,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+        if (APIService.logged) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.popup, ReviewCreationPopupFragment.newInstance(restaurantId!!.toInt()))
+                .commitNow();
+        } else {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.popup, ReviewCreationLoginPopupFragment.newInstance())
+                .commitNow();
+        }
     }
 
     private fun setToolbar() {

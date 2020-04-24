@@ -1,16 +1,34 @@
 package ca.ulaval.ima.mp.ui.review.list
 
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.model.Review
+import ca.ulaval.ima.mp.ui.review.preview.ReviewCommentImageActivity
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.comment
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.date
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.fullname
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.item_content
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.rate
+import kotlinx.android.synthetic.main.review_list_item_header_fragment.view.*
+import kotlinx.android.synthetic.main.review_list_item_image_fragment.view.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
-class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ReviewRecyclerViewAdapter(val context: Context, private val maxReviews: Int) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val HEADER = 0
     private val REVIEW_WITH_IMAGE = 1
@@ -38,7 +56,7 @@ class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
         return when (viewType) {
             HEADER -> HeaderViewHolder(
                 inflater.inflate(
-                    R.layout.review_list_item_loading_fragment,
+                    R.layout.review_list_item_header_fragment,
                     parent,
                     false
                 )
@@ -59,7 +77,7 @@ class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
             )
             REVIEW_WITH_IMAGE -> ImageViewHolder(
                 inflater.inflate(
-                    R.layout.review_list_item_fragment,
+                    R.layout.review_list_item_image_fragment,
                     parent,
                     false
                 )
@@ -70,8 +88,63 @@ class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = reviews[position]
-        if (getItemViewType(position) == REVIEW_WITHOUT_IMAGE)
-            (holder as SimpleViewHolder).username.text = item.creator!!.first_name
+        when (getItemViewType(position)) {
+            HEADER -> {
+                val header = holder as HeaderViewHolder
+                header.number.text = "(${maxReviews})"
+            }
+            REVIEW_WITHOUT_IMAGE -> {
+                val simpleHolder = holder as SimpleViewHolder
+                val parser = SimpleDateFormat("yyyy-MM-dd")
+                val date = parser.parse(item.date!!)
+                val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA_FRENCH)
+                simpleHolder.username.text =
+                    "${item.creator!!.first_name.toString()} ${item.creator!!.last_name}"
+                simpleHolder.date.text = formatter.format(date)
+                simpleHolder.comment.text = item.comment
+                simpleHolder.rate.rating = item.stars?.toFloat()!!
+            }
+            REVIEW_WITH_IMAGE -> {
+                val imageHolder = holder as ImageViewHolder
+                val parser = SimpleDateFormat("yyyy-MM-dd")
+                val date = parser.parse(item.date!!)
+                val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA_FRENCH)
+                imageHolder.username.text =
+                    "${item.creator!!.first_name.toString()} ${item.creator!!.last_name}"
+                imageHolder.date.text = formatter.format(date)
+                imageHolder.comment.text = item.comment
+                imageHolder.rate.rating = item.stars?.toFloat()!!
+                imageHolder.image_layout.image.setOnClickListener {
+                    val intent = Intent(context, ReviewCommentImageActivity::class.java).apply {
+                        putExtra(ReviewCommentImageActivity.IMAGE_URL_KEY, item.image)
+                    }
+                    context.startActivity(intent)
+                }
+                Picasso.with(context)
+                    .load(item.image)
+                    .transform(
+                        RoundedCornersTransformation(
+                            context.resources.getDimension(R.dimen.image_corner_radius).toInt(),
+                            0
+                        )
+                    )
+                    .fit()
+                    .into(imageHolder.image_layout.image, object : Callback {
+                        override fun onSuccess() {
+                            imageHolder.image_layout.progress.visibility = View.GONE
+                        }
+
+                        override fun onError() {
+                            Toast.makeText(
+                                context,
+                                "Can't load the comment picture",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    })
+            }
+        }
     }
 
     override fun getItemCount(): Int = reviews.size
@@ -114,13 +187,22 @@ class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     inner class HeaderViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+        val number = mView.review_number
     }
 
     inner class SimpleViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
-        val username: TextView = mView.findViewById(R.id.username)
+        val username = mView.item_content.fullname
+        val date = mView.item_content.date
+        val comment = mView.item_content.comment
+        val rate = mView.item_content.rate
     }
 
     inner class ImageViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+        val username = mView.item_content.fullname
+        val date = mView.item_content.date
+        val comment = mView.item_content.comment
+        val rate = mView.item_content.rate
+        val image_layout = mView.item_content.image_layout
     }
 
     inner class LoaderViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
