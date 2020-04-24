@@ -2,13 +2,16 @@ package ca.ulaval.ima.mp.ui.review.list
 
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.model.Review
+import ca.ulaval.ima.mp.ui.review.preview.ReviewCommentImageActivity
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
@@ -111,6 +114,12 @@ class ReviewRecyclerViewAdapter(val context: Context, private val maxReviews: In
                 imageHolder.date.text = formatter.format(date)
                 imageHolder.comment.text = item.comment
                 imageHolder.rate.rating = item.stars?.toFloat()!!
+                imageHolder.image_layout.image.setOnClickListener {
+                    val intent = Intent(context, ReviewCommentImageActivity::class.java).apply {
+                        putExtra(ReviewCommentImageActivity.IMAGE_URL_KEY, item.image)
+                    }
+                    context.startActivity(intent)
+                }
                 Picasso.with(context)
                     .load(item.image)
                     .transform(
