@@ -1,8 +1,11 @@
 package ca.ulaval.ima.mp.ui.restaurant
 
+import android.media.Rating
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ca.ulaval.ima.mp.MiniProject
@@ -54,10 +57,18 @@ class RestaurantActivity : AppCompatActivity() {
     }
 
     private fun setView(restaurant: Restaurant) {
-        Log.d("res", restaurant.toString())
+        Log.d("res", restaurant.opening_hours.toString())
         val imageView: ImageView = findViewById(R.id.restaurant_logo)
         Picasso.with(this)
             .load(restaurant.image)
+            .fit()
             .into(imageView)
+        (findViewById<TextView>(R.id.restaurant_name)).text = restaurant.name
+        (findViewById<TextView>(R.id.restaurant_type)).text = "Snack/Food • Confort food"
+        (findViewById<TextView>(R.id.restaurant_dist)).text = "${restaurant.distance}km"
+        (findViewById<RatingBar>(R.id.restaurant_reviews)).rating = restaurant.review_average!!
+        (findViewById<TextView>(R.id.restaurant_review_count)).text = "(${restaurant.review_count})"
+        (findViewById<TextView>(R.id.restaurant_phone)).text = restaurant.phone_number
+        (findViewById<TextView>(R.id.restaurant_website)).text = restaurant.website
     }
 }
