@@ -1,6 +1,7 @@
 package ca.ulaval.ima.mp.ui.restaurant
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,8 @@ import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.Restaurant
+import com.squareup.picasso.Picasso
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
 class RestaurantActivity : AppCompatActivity() {
 
@@ -45,6 +48,10 @@ class RestaurantActivity : AppCompatActivity() {
     }
 
     private fun setView(restaurant: Restaurant) {
+        Log.d("res", restaurant.toString())
         val imageView: ImageView = findViewById(R.id.restaurant_logo)
+        Picasso.with(this)
+            .load(restaurant.image)
+            .into(imageView)
     }
 }
