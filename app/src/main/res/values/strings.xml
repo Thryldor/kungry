@@ -18,6 +18,15 @@
     <string name="account_eval">Nombre d\'évaluations attribuées</string>
     <string name="account_disconnect">Déconnexion</string>
     <string name="background_description">Background Image</string>
+    <string name="open_hours">Heures d'ouverture</string>
+
+    <string name="monday">Lundi</string>
+    <string name="tuesday">Mardi</string>
+    <string name="wednesday">Mercredi</string>
+    <string name="thursday">Jeudi</string>
+    <string name="friday">Vendredi</string>
+    <string name="saturday">Samedi</string>
+    <string name="sunday">Dimanche</string>
 
     <string name="switch_register_button">Nouveau avec Kungry ?</string>
     <string name="switch_login_button">Déjà abonnée?</string>

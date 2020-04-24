@@ -13,6 +13,7 @@ import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.AccountLogin
 import ca.ulaval.ima.mp.api.model.RestaurantLight
+import ca.ulaval.ima.mp.ui.restaurant.RestaurantActivity
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantListFragment
 import ca.ulaval.ima.mp.ui.review.list.ReviewListActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -58,6 +59,9 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.OnRestaurantLis
     }
 
     override fun onRestaurantClick(item: RestaurantLight?) {
-        // TODO Implement
+        val intent = Intent(this, RestaurantActivity::class.java).apply {
+            putExtra(RestaurantActivity.RESTAURANT_ID_KEY, item!!.id)
+        }
+        startActivity(intent)
     }
 }
