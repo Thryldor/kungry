@@ -1,37 +1,30 @@
 package ca.ulaval.ima.mp.ui.restaurant
 
-import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import ca.ulaval.ima.mp.MiniProject
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.Restaurant
-import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationActivity
-import java.lang.Exception
 
 class RestaurantActivity : AppCompatActivity() {
 
     companion object {
         val RESTAURANT_ID_KEY: String = "RESTAURANT_ID_KEY"
     }
-    private var restaurantId: Int? = 13
+    private var restaurantId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_restaurant)
-
-        if (!APIService.logged)
-            throw RuntimeException("Creation activity need an authenticated access")
-        //restaurantId = intent.getStringExtra(ReviewCreationActivity.RESTAURANT_ID_KEY)
-            ?: throw RuntimeException("No restaurant ID passed to review creation activity")
+        restaurantId = intent.getStringExtra(RESTAURANT_ID_KEY)
+            ?: throw RuntimeException("No restaurant ID passed to restaurant activity")
 
         APIService.getRestaurantById(
-            restaurantId!!,
+            restaurantId!!.toInt(),
             createHandler { result ->
                 handleResult(result)
             }

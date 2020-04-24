@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), RestaurantListFragment.RestaurantListF
 
     override fun onRestaurantClick(restaurant: RestaurantLight) {
         val intent = Intent(this, RestaurantActivity::class.java).apply {
-            putExtra(RestaurantActivity.RESTAURANT_ID_KEY, restaurant!!.id)
+            putExtra(RestaurantActivity.RESTAURANT_ID_KEY, restaurant!!.id.toString())
         }
         startActivity(intent)
     }
