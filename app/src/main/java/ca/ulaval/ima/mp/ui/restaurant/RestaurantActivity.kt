@@ -32,19 +32,16 @@ class RestaurantActivity : AppCompatActivity() {
     }
 
     private fun handleResult(result: APIService.Result<Restaurant>) {
-        val restaurant: Restaurant
         try {
-            restaurant = result.getResult()
-        }
-        catch (e:  APIService.CallFailureException) {
+            setView(result.getResult())
+        } catch (e:  APIService.CallFailureException) {
             Toast.makeText(
                 MiniProject.appContext,
                 "Error getting the restaurant: " + e.wrapper!!.error!!.display,
                 Toast.LENGTH_LONG
             ).show()
-            return
+            finish()
         }
-        setView(restaurant)
     }
 
     private fun setView(restaurant: Restaurant) {
