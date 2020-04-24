@@ -13,6 +13,7 @@ import ca.ulaval.ima.mp.api.model.Restaurant
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
+
 class RestaurantActivity : AppCompatActivity() {
 
     companion object {
@@ -34,9 +35,14 @@ class RestaurantActivity : AppCompatActivity() {
         )
     }
 
-    private fun handleResult(result: APIService.Result<Restaurant>) {
+    private fun handleResult(response: APIService.Result<Restaurant>) {
         try {
-            setView(result.getResult())
+            val result = response.getResult()
+            setView(result)
+            supportFragmentManager.beginTransaction()
+                .add(R.id.map, RestaurantMapFragment.newInstance(result.location?.latitude.toString(), result.location?.longitude.toString()))
+                .commit()
+
         } catch (e:  APIService.CallFailureException) {
             Toast.makeText(
                 MiniProject.appContext,

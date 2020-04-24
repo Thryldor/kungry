@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.restaurant.RestaurantActivity">
-
     <ImageView
         android:id="@+id/restaurant_logo"
         android:layout_width="match_parent"
@@ -325,7 +324,19 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/map"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/see_more"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="167.5dp">
+
+    </FrameLayout>
+
     <TextView
+        android:id="@+id/see_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Voir plus d'évaluations"
@@ -337,5 +348,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
