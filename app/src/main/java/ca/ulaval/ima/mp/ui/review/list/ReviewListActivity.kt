@@ -37,9 +37,20 @@ class ReviewListActivity : AppCompatActivity(),
         setToolbar()
         restaurantId = intent.getStringExtra(ReviewCreationActivity.RESTAURANT_ID_KEY)
             ?: throw RuntimeException("No restaurant ID passed to review list activity")
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, ReviewListFragment.newInstance())
-            .commitNow();
+        APIService.getRestaurantById(restaurantId?.toInt()!!, createHandler {resp ->
+            try {
+                val res = resp.getResult()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, ReviewListFragment.newInstance(res.review_count!!))
+                    .commitNow();
+            } catch (e: APIService.CallFailureException) {
+                Toast.makeText(
+                    MiniProject.appContext,
+                    e.wrapper?.error?.display,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     private fun setToolbar() {

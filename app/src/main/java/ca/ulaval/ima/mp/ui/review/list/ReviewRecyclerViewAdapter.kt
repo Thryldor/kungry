@@ -4,13 +4,18 @@ package ca.ulaval.ima.mp.ui.review.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.model.Review
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.*
+import kotlinx.android.synthetic.main.review_list_item_header_fragment.view.*
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
+import kotlin.collections.ArrayList
 
 
-class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ReviewRecyclerViewAdapter(val maxReviews: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val HEADER = 0
     private val REVIEW_WITH_IMAGE = 1
@@ -38,7 +43,7 @@ class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
         return when (viewType) {
             HEADER -> HeaderViewHolder(
                 inflater.inflate(
-                    R.layout.review_list_item_loading_fragment,
+                    R.layout.review_list_item_header_fragment,
                     parent,
                     false
                 )
@@ -70,8 +75,29 @@ class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = reviews[position]
-        if (getItemViewType(position) == REVIEW_WITHOUT_IMAGE)
-            (holder as SimpleViewHolder).username.text = item.creator!!.first_name
+        when (getItemViewType(position)) {
+            HEADER -> {
+                val header = holder as HeaderViewHolder
+                header.number.text = "(${maxReviews})"
+            }
+            REVIEW_WITHOUT_IMAGE -> {
+                val simpleHolder = holder as SimpleViewHolder
+                val parser = SimpleDateFormat("yyyy-MM-dd")
+                val date = parser.parse(item.date!!)
+                val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA_FRENCH)
+                simpleHolder.username.text =
+                    "${item.creator!!.first_name.toString()} ${item.creator!!.last_name}"
+                simpleHolder.date.text = formatter.format(date)
+                simpleHolder.comment.text = item.comment
+            }
+            REVIEW_WITH_IMAGE -> {
+                val imageHolder = holder as ImageViewHolder
+                imageHolder.username.text =
+                    "${item.creator!!.first_name.toString()} ${item.creator!!.last_name}"
+                imageHolder.date.text = item.date
+                imageHolder.comment.text = item.comment
+            }
+        }
     }
 
     override fun getItemCount(): Int = reviews.size
@@ -114,13 +140,19 @@ class ReviewRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     inner class HeaderViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+        val number = mView.review_number
     }
 
     inner class SimpleViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
-        val username: TextView = mView.findViewById(R.id.username)
+        val username = mView.item_content.fullname
+        val date = mView.item_content.date
+        val comment = mView.item_content.comment
     }
 
     inner class ImageViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+        val username = mView.item_content.fullname
+        val date = mView.item_content.date
+        val comment = mView.item_content.comment
     }
 
     inner class LoaderViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {

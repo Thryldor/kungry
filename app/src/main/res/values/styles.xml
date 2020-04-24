@@ -21,4 +21,8 @@
 
     <style name="KungryTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="KungryTheme.ProgressBar" parent="KungryTheme">
+        <item name="colorAccent">@color/light_green</item>
+    </style>
+
 </resources>
