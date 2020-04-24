@@ -31,7 +31,7 @@ class ReviewListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.review_list_fragment, container, false)
-        reviewAdapter = ReviewRecyclerViewAdapter(arguments!!.getInt("MAX_REVIEWS"))
+        reviewAdapter = ReviewRecyclerViewAdapter(activity!!, arguments!!.getInt("MAX_REVIEWS"))
         if (view.recycler is RecyclerView) {
             with(view.recycler) {
                 val listener = controller.getPaginationScrollListener(reviewAdapter)

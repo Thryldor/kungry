@@ -1,20 +1,30 @@
 package ca.ulaval.ima.mp.ui.review.list
 
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.model.Review
-import kotlinx.android.synthetic.main.review_list_item_fragment.view.*
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.comment
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.date
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.fullname
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.item_content
+import kotlinx.android.synthetic.main.review_list_item_fragment.view.rate
 import kotlinx.android.synthetic.main.review_list_item_header_fragment.view.*
+import kotlinx.android.synthetic.main.review_list_item_image_fragment.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class ReviewRecyclerViewAdapter(val maxReviews: Int) :
+class ReviewRecyclerViewAdapter(val context: Context, private val maxReviews: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val HEADER = 0
@@ -64,7 +74,7 @@ class ReviewRecyclerViewAdapter(val maxReviews: Int) :
             )
             REVIEW_WITH_IMAGE -> ImageViewHolder(
                 inflater.inflate(
-                    R.layout.review_list_item_fragment,
+                    R.layout.review_list_item_image_fragment,
                     parent,
                     false
                 )
@@ -101,6 +111,29 @@ class ReviewRecyclerViewAdapter(val maxReviews: Int) :
                 imageHolder.date.text = formatter.format(date)
                 imageHolder.comment.text = item.comment
                 imageHolder.rate.rating = item.stars?.toFloat()!!
+                Picasso.with(context)
+                    .load(item.image)
+                    .transform(
+                        RoundedCornersTransformation(
+                            context.resources.getDimension(R.dimen.image_corner_radius).toInt(),
+                            0
+                        )
+                    )
+                    .fit()
+                    .into(imageHolder.image_layout.image, object : Callback {
+                        override fun onSuccess() {
+                            imageHolder.image_layout.progress.visibility = View.GONE
+                        }
+
+                        override fun onError() {
+                            Toast.makeText(
+                                context,
+                                "Can't load the comment picture",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    })
             }
         }
     }
@@ -160,6 +193,7 @@ class ReviewRecyclerViewAdapter(val maxReviews: Int) :
         val date = mView.item_content.date
         val comment = mView.item_content.comment
         val rate = mView.item_content.rate
+        val image_layout = mView.item_content.image_layout
     }
 
     inner class LoaderViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
