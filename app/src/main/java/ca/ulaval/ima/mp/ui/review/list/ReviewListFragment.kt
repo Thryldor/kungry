@@ -51,7 +51,7 @@ class ReviewListFragment : Fragment() {
         if (context is ReviewListFragmentController) {
             controller = context
         } else {
-            throw RuntimeException("$context must implement OnListFragmentInteractionListener")
+            throw RuntimeException("$context must implement ReviewListFragmentController")
         }
     }
 
