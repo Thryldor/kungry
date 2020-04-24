@@ -9,13 +9,6 @@ import android.view.ViewGroup
 import ca.ulaval.ima.mp.R
 
 class RestaurantInfoFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    companion object {
-        fun newInstance() = MapFragment()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
