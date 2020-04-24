@@ -26,11 +26,12 @@ class RestaurantMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mPin: Bitmap
 
     companion object {
-        fun newInstance() = RestaurantMapFragment()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        fun newInstance(latitude: String, longitude: String) = RestaurantMapFragment().apply {
+            arguments = Bundle().apply {
+                putString("latitude", latitude)
+                putString("longitude",longitude)
+            }
+        }
     }
 
     override fun onCreateView(
