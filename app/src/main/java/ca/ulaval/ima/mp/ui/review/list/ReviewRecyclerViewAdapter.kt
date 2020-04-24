@@ -10,12 +10,12 @@ import ca.ulaval.ima.mp.api.model.Review
 import kotlinx.android.synthetic.main.review_list_item_fragment.view.*
 import kotlinx.android.synthetic.main.review_list_item_header_fragment.view.*
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class ReviewRecyclerViewAdapter(val maxReviews: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ReviewRecyclerViewAdapter(val maxReviews: Int) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val HEADER = 0
     private val REVIEW_WITH_IMAGE = 1
@@ -89,13 +89,18 @@ class ReviewRecyclerViewAdapter(val maxReviews: Int) : RecyclerView.Adapter<Recy
                     "${item.creator!!.first_name.toString()} ${item.creator!!.last_name}"
                 simpleHolder.date.text = formatter.format(date)
                 simpleHolder.comment.text = item.comment
+                simpleHolder.rate.rating = item.stars?.toFloat()!!
             }
             REVIEW_WITH_IMAGE -> {
                 val imageHolder = holder as ImageViewHolder
+                val parser = SimpleDateFormat("yyyy-MM-dd")
+                val date = parser.parse(item.date!!)
+                val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.CANADA_FRENCH)
                 imageHolder.username.text =
                     "${item.creator!!.first_name.toString()} ${item.creator!!.last_name}"
-                imageHolder.date.text = item.date
+                imageHolder.date.text = formatter.format(date)
                 imageHolder.comment.text = item.comment
+                imageHolder.rate.rating = item.stars?.toFloat()!!
             }
         }
     }
@@ -147,12 +152,14 @@ class ReviewRecyclerViewAdapter(val maxReviews: Int) : RecyclerView.Adapter<Recy
         val username = mView.item_content.fullname
         val date = mView.item_content.date
         val comment = mView.item_content.comment
+        val rate = mView.item_content.rate
     }
 
     inner class ImageViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val username = mView.item_content.fullname
         val date = mView.item_content.date
         val comment = mView.item_content.comment
+        val rate = mView.item_content.rate
     }
 
     inner class LoaderViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
