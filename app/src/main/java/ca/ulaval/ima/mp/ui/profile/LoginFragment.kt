@@ -48,14 +48,7 @@ class LoginFragment : Fragment() {
                 ), createHandler { result ->
                     try {
                         val res: TokenOutput = result.getResult()
-                        val sharedPref = activity?.getSharedPreferences(
-                            getString(R.string.token_shared_pref), Context.MODE_PRIVATE)
-                        val gson = Gson()
-                        val json = gson.toJson(res)
-                        with(sharedPref!!.edit()) {
-                            putString(getString(R.string.token_shared_pref), json)
-                            commit()
-                        }
+                        APIService.saveToken(context!!, res)
                         activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_login_to_account)
                     }
                     catch (e: Exception) {
