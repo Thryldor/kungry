@@ -241,8 +241,7 @@ class RestaurantActivity : AppCompatActivity() {
     private fun fetchLocation(location: Location?) {
         if (location != null)
             currentLocation = LatLng(location.latitude, location.longitude)
-        // TODO COMMENTER AU RENDU
-        currentLocation = LatLng(46.829853, -71.254028)
+        //currentLocation = LatLng(46.829853, -71.254028)
     }
 
     private fun getLocation(): Boolean {

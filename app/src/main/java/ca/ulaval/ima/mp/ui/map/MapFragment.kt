@@ -215,9 +215,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     }
 
     override fun onLocationChanged(location: Location?) {
-        // TODO Décommenter pour rendu
-        //val latLng = LatLng(location!!.latitude, location.longitude)
-        val latLng = LatLng(46.829853, -71.254028)
+        val latLng = LatLng(location!!.latitude, location.longitude)
+        //val latLng = LatLng(46.829853, -71.254028)
         val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13f)
         mMap.animateCamera(cameraUpdate)
         mLocation.removeUpdates(this)
