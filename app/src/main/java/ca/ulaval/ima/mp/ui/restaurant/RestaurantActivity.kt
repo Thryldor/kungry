@@ -22,6 +22,7 @@ import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.*
 import ca.ulaval.ima.mp.tools.TypeConverter
+import ca.ulaval.ima.mp.ui.review.creation.LoginActivity
 import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationActivity
 import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationPopupFragment
 import ca.ulaval.ima.mp.ui.review.list.ReviewListActivity
@@ -153,7 +154,9 @@ class RestaurantActivity : AppCompatActivity() {
                 else -> null
             }
                 ?: continue
-            view.text = "${format.format(parse.parse(hours.opening_hour))} à ${format.format(parse.parse(hours.closing_hour))}"
+            view.text = "${format.format(parse.parse(hours.opening_hour))} à ${format.format(
+                parse.parse(hours.closing_hour)
+            )}"
         }
     }
 
@@ -289,12 +292,16 @@ class RestaurantActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d("RES", "ON ACTIVITY RESULT: " + requestCode.toString() + " - " + resultCode.toString() + " - " + data.toString())
-        if (requestCode == Activity.RESULT_OK) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == LoginActivity.LOGIN_REQUEST && resultCode == Activity.RESULT_OK) {
+
             supportFragmentManager.beginTransaction()
-                .replace(R.id.popup, ReviewCreationPopupFragment.newInstance(restaurantId!!.toInt()))
+                .replace(
+                    R.id.popup,
+                    ReviewCreationPopupFragment.newInstance(restaurantId!!.toInt())
+                )
                 .commitNow();
         }
-        super.onActivityResult(requestCode, resultCode, data)
     }
+
 }

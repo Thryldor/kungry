@@ -3,7 +3,6 @@ package ca.ulaval.ima.mp.ui.review.creation
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -116,7 +115,6 @@ class ReviewCreationActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d("RES", "IL EST APPELE LA")
         super.onActivityResult(requestCode, resultCode, data)
         bitmap = UploadService.extractBitmapFromResult(requestCode, resultCode, data)
         if (bitmap != null) {

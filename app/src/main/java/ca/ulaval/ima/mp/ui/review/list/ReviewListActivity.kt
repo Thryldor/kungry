@@ -3,9 +3,7 @@ package ca.ulaval.ima.mp.ui.review.list
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -13,17 +11,12 @@ import ca.ulaval.ima.mp.MiniProject
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
-import ca.ulaval.ima.mp.api.model.PaginationResult
 import ca.ulaval.ima.mp.api.model.RestaurantGetRequest
-import ca.ulaval.ima.mp.api.model.RestaurantGetReviewsRequest
-import ca.ulaval.ima.mp.api.model.Review
-import ca.ulaval.ima.mp.tools.PaginationScrollListener
+import ca.ulaval.ima.mp.ui.review.creation.LoginActivity
 import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationActivity
 import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationPopupFragment
 import kotlinx.android.synthetic.main.action_bar.view.*
 import kotlinx.android.synthetic.main.review_list_activity.*
-import kotlinx.android.synthetic.main.review_list_fragment.*
-
 
 class ReviewListActivity : AppCompatActivity() {
 
@@ -79,14 +72,18 @@ class ReviewListActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d("RES", "ON ACTIVITY REVIEWLIST: " + requestCode.toString() + " - " + resultCode.toString() + " - " + data.toString())
-        if (requestCode == Activity.RESULT_OK) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == LoginActivity.LOGIN_REQUEST && resultCode == Activity.RESULT_OK) {
+
             supportFragmentManager.beginTransaction()
-                .replace(R.id.popup, ReviewCreationPopupFragment.newInstance(restaurantId!!.toInt()))
+                .replace(
+                    R.id.popup,
+                    ReviewCreationPopupFragment.newInstance(restaurantId!!.toInt())
+                )
                 .commitNow();
         }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }
