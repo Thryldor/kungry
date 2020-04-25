@@ -28,6 +28,8 @@
     <string name="saturday">Samedi</string>
     <string name="sunday">Dimanche</string>
 
+    <string name="token_shared_pref">token</string>
+
     <string name="switch_register_button">Nouveau avec Kungry ?</string>
     <string name="switch_login_button">Déjà abonnée?</string>
 

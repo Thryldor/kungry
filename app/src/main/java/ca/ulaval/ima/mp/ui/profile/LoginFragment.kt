@@ -1,5 +1,6 @@
 package ca.ulaval.ima.mp.ui.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +14,10 @@ import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.AccountLogin
+import ca.ulaval.ima.mp.api.model.TokenOutput
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+
 
 class LoginFragment : Fragment() {
 
@@ -43,7 +47,15 @@ class LoginFragment : Fragment() {
                     password = this.password
                 ), createHandler { result ->
                     try {
-                        result.getResult()
+                        val res: TokenOutput = result.getResult()
+                        val sharedPref = activity?.getSharedPreferences(
+                            getString(R.string.token_shared_pref), Context.MODE_PRIVATE)
+                        val gson = Gson()
+                        val json = gson.toJson(res)
+                        with(sharedPref!!.edit()) {
+                            putString(getString(R.string.token_shared_pref), json)
+                            commit()
+                        }
                         activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_login_to_account)
                     }
                     catch (e: Exception) {
@@ -77,6 +89,9 @@ class LoginFragment : Fragment() {
         val root = inflater.inflate(R.layout.login_fragment, container, false)
         (activity as AppCompatActivity).supportActionBar?.hide()
 
+        if (APIService.logged) {
+            activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_login_to_account)
+        }
         setBackground(root.findViewById(R.id.form_background))
         setSubmitButton(root)
         setSwitchRegister(root.findViewById(R.id.switch_register))

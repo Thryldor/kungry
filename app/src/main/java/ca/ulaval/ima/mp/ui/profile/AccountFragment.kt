@@ -1,5 +1,6 @@
 package ca.ulaval.ima.mp.ui.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.navigation.findNavController
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
+import com.google.gson.Gson
 
 class AccountFragment : Fragment() {
 
@@ -44,6 +46,13 @@ class AccountFragment : Fragment() {
 
     private fun setDisconnectButton(button: Button) {
         button.setOnClickListener {
+            val sharedPref = activity?.getSharedPreferences(
+                getString(R.string.token_shared_pref), Context.MODE_PRIVATE)
+            with(sharedPref!!.edit()) {
+                putString(getString(R.string.token_shared_pref), null)
+                commit()
+            }
+            APIService.disconnect()
             activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_account_to_login)
         }
     }

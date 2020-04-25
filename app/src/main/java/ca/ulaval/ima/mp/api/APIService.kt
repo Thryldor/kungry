@@ -1,10 +1,14 @@
 package ca.ulaval.ima.mp.api
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings.Global.getString
+import android.util.Log
 import ca.ulaval.ima.mp.MiniProject
+import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.model.*
 import com.google.gson.Gson
 import com.google.gson.JsonElement
@@ -32,6 +36,23 @@ object APIService {
         private set
 
     // Account
+    init {
+        val sharedPref = MiniProject.appContext?.getSharedPreferences(
+            "token", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val tokenVar: String? = sharedPref!!.getString("token", "")
+        if (tokenVar !== null) {
+            try {
+                token = gson.fromJson(tokenVar, TokenOutput::class.java)
+                if (token != null) {
+                    logged = true
+                    logging_timestamp = Date().time
+                }
+            } catch(e: Exception) {
+                Log.d("SP", e.toString())
+            }
+        }
+    }
 
     fun createAccount(model: CreateAccount, handler: ResponseHandler<TokenOutput>) {
         val jsonBody = gson.toJson(model)
@@ -367,6 +388,11 @@ object APIService {
 
 
 // APIService utils
+
+    fun disconnect () {
+        logged = false
+        token = null
+    }
 
     private fun isTokenExpired(): Boolean {
         val date = Date()
