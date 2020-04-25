@@ -115,11 +115,13 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginRight="20dp"
+                android:autoLink="phone"
                 android:background="#F2F2F2"
                 android:drawableStart="@drawable/ic_phone"
                 android:drawableLeft="@drawable/ic_phone"
                 android:drawablePadding="20dp"
                 android:fontFamily="@font/sf_ui_light"
+                android:linksClickable="true"
                 android:paddingStart="20dp"
                 android:paddingLeft="20dp"
                 android:paddingTop="17dp"
@@ -141,6 +143,7 @@
                 android:drawableLeft="@drawable/ic_link"
                 android:drawablePadding="20dp"
                 android:fontFamily="@font/sf_ui_light"
+                android:linksClickable="true"
                 android:paddingStart="20dp"
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"
@@ -375,11 +378,11 @@
                 android:id="@+id/review_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:text="(46)"
                 android:layout_marginStart="6dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginBottom="3.5dp"
+                android:text="(46)"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@id/reviews_title"
                 app:layout_constraintLeft_toRightOf="@id/reviews_title" />
 
@@ -395,10 +398,10 @@
 
                 <ProgressBar
                     android:id="@+id/reviews_progress"
-                    android:theme="@style/KungryTheme.ProgressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:theme="@style/KungryTheme.ProgressBar" />
 
             </LinearLayout>
 

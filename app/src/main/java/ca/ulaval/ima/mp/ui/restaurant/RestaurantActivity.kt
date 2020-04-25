@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -119,7 +120,19 @@ class RestaurantActivity : AppCompatActivity() {
                 6,
                 phone.length
             )}"
+        restaurant_phone.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL);
+            intent.data = Uri.parse("tel:${restaurant.phone_number}");
+            startActivity(intent);
+
+        }
         restaurant_website.text = restaurant.website
+        restaurant_website.setOnClickListener {
+            val i = Intent(Intent.ACTION_VIEW)
+            i.data = Uri.parse(restaurant.website);
+            startActivity(i);
+
+        }
         restaurant_rate.rating = restaurant.review_average!!
         restaurant_type.text = TypeConverter.convert(restaurant.type!!)
         setDay(restaurant.opening_hours)
