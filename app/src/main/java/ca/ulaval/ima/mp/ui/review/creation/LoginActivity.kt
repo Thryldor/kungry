@@ -51,8 +51,8 @@ class LoginActivity : AppCompatActivity() {
             getValues()
             APIService.login(
                 AccountLogin(
-                    email = "philippe.desousaviolante@gmail.com",//this.email,
-                    password = "Password1234"// this.password
+                    email = this.email,
+                    password = this.password
                 ), createHandler { result ->
                     try {
                         val res: TokenOutput = result.getResult()
