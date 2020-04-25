@@ -79,6 +79,14 @@ class ReviewCreationActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
             return
+        } catch (e: APIService.AuthenticationFailureException) {
+            Toast.makeText(
+                this,
+                "Authentication error : " + e.wrapper!!.error!!.display,
+                Toast.LENGTH_LONG
+            ).show()
+            finish()
+            return
         }
         if (bitmap != null)
             attachBitmaps(review)
@@ -99,7 +107,15 @@ class ReviewCreationActivity : AppCompatActivity() {
                     "Image upload error : " + e.wrapper!!.error!!.display,
                     Toast.LENGTH_LONG
                 ).show()
+            } catch (e: APIService.AuthenticationFailureException) {
+                Toast.makeText(
+                    this,
+                    "Authentication error : " + e.wrapper!!.error!!.display,
+                    Toast.LENGTH_LONG
+                ).show()
             }
+
+
             finish();
         })
     }

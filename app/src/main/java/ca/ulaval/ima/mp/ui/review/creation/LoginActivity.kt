@@ -1,13 +1,11 @@
 package ca.ulaval.ima.mp.ui.review.creation
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +15,6 @@ import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.AccountLogin
 import ca.ulaval.ima.mp.api.model.TokenOutput
-import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.action_bar.view.*
 import kotlinx.android.synthetic.main.activity_login.*

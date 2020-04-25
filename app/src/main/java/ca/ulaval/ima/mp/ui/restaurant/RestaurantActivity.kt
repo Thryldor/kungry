@@ -112,6 +112,8 @@ class RestaurantActivity : AppCompatActivity() {
         val phone = restaurant.phone_number!!
         restaurant_name.text = restaurant.name
         restaurant_dist.text = "${restaurant.distance}km"
+        restaurant_review_count.text = "(${restaurant.review_count})"
+        review_number.text = "(${restaurant.review_count})"
         restaurant_phone.text =
             "(${phone.substring(0, 3)}) ${phone.substring(3, 6)}-${phone.substring(
                 6,
