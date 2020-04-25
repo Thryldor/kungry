@@ -46,13 +46,7 @@ class AccountFragment : Fragment() {
 
     private fun setDisconnectButton(button: Button) {
         button.setOnClickListener {
-            val sharedPref = activity?.getSharedPreferences(
-                getString(R.string.token_shared_pref), Context.MODE_PRIVATE)
-            with(sharedPref!!.edit()) {
-                putString(getString(R.string.token_shared_pref), null)
-                commit()
-            }
-            APIService.disconnect()
+            APIService.disconnect(context!!)
             activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_account_to_login)
         }
     }

@@ -56,15 +56,7 @@ class LoginActivity : AppCompatActivity() {
                 ), createHandler { result ->
                     try {
                         val res: TokenOutput = result.getResult()
-                        val sharedPref = getSharedPreferences(
-                            getString(R.string.token_shared_pref), Context.MODE_PRIVATE
-                        )
-                        val gson = Gson()
-                        val json = gson.toJson(res)
-                        with(sharedPref!!.edit()) {
-                            putString(getString(ca.ulaval.ima.mp.R.string.token_shared_pref), json)
-                            commit()
-                        }
+                        APIService.saveToken(this, res)
                         val resultIntent: Intent = Intent()
                         setResult(Activity.RESULT_OK, resultIntent)
                         finish()

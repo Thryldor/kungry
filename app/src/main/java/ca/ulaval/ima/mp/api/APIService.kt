@@ -54,6 +54,17 @@ object APIService {
         }
     }
 
+    fun saveToken(context: Context, sToken: TokenOutput) {
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.token_shared_pref), Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = gson.toJson(sToken)
+        with(sharedPref!!.edit()) {
+            putString(context.getString(R.string.token_shared_pref), json)
+            commit()
+        }
+    }
+
     fun createAccount(model: CreateAccount, handler: ResponseHandler<TokenOutput>) {
         val jsonBody = gson.toJson(model)
         val body: RequestBody = RequestBody.create(JSON, jsonBody)
@@ -389,7 +400,13 @@ object APIService {
 
 // APIService utils
 
-    fun disconnect () {
+    fun disconnect (context: Context) {
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.token_shared_pref), Context.MODE_PRIVATE)
+        with(sharedPref!!.edit()) {
+            putString(context.getString(R.string.token_shared_pref), null)
+            commit()
+        }
         logged = false
         token = null
     }
