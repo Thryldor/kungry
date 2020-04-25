@@ -11,27 +11,24 @@ import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.PaginationResult
+import ca.ulaval.ima.mp.api.model.RestaurantGetRequest
 import ca.ulaval.ima.mp.api.model.RestaurantGetReviewsRequest
 import ca.ulaval.ima.mp.api.model.Review
 import ca.ulaval.ima.mp.tools.PaginationScrollListener
 import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationActivity
-import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationLoginPopupFragment
 import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationPopupFragment
 import kotlinx.android.synthetic.main.action_bar.view.*
 import kotlinx.android.synthetic.main.review_list_activity.*
 import kotlinx.android.synthetic.main.review_list_fragment.*
 
 
-class ReviewListActivity : AppCompatActivity(),
-    ReviewListFragment.ReviewListFragmentController {
+class ReviewListActivity : AppCompatActivity() {
 
     companion object {
         val RESTAURANT_ID_KEY: String = "RESTAURANT_ID_KEY"
     }
 
     private var restaurantId: String? = null
-    private var isReviewsLoading = false
-    private var currentResult: PaginationResult<Review>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,29 +36,28 @@ class ReviewListActivity : AppCompatActivity(),
         setToolbar()
         restaurantId = intent.getStringExtra(ReviewCreationActivity.RESTAURANT_ID_KEY)
             ?: throw RuntimeException("No restaurant ID passed to review list activity")
-        APIService.getRestaurantById(restaurantId?.toInt()!!, createHandler {resp ->
-            try {
-                val res = resp.getResult()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, ReviewListFragment.newInstance(res.review_count!!))
-                    .commitNow();
-            } catch (e: APIService.CallFailureException) {
-                Toast.makeText(
-                    MiniProject.appContext,
-                    e.wrapper?.error?.display,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
-        if (APIService.logged) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.popup, ReviewCreationPopupFragment.newInstance(restaurantId!!.toInt()))
-                .commitNow();
-        } else {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.popup, ReviewCreationLoginPopupFragment.newInstance())
-                .commitNow();
-        }
+        APIService.getRestaurantById(
+            RestaurantGetRequest(null, null, restaurantId?.toInt()!!),
+            createHandler { resp ->
+                try {
+                    val res = resp.getResult()
+                    supportFragmentManager.beginTransaction()
+                        .replace(
+                            R.id.container,
+                            ReviewListFragment.newInstance(restaurantId!!, res.review_count!!)
+                        )
+                        .commitNow();
+                } catch (e: APIService.CallFailureException) {
+                    Toast.makeText(
+                        MiniProject.appContext,
+                        e.wrapper?.error?.display,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.popup, ReviewCreationPopupFragment.newInstance(restaurantId!!.toInt()))
+            .commitNow();
     }
 
     private fun setToolbar() {
@@ -69,74 +65,6 @@ class ReviewListActivity : AppCompatActivity(),
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
-
-    override fun getPaginationScrollListener(adapter: ReviewRecyclerViewAdapter): PaginationScrollListener {
-        return object : PaginationScrollListener() {
-
-            override val currentPageCount: Int
-                get() = currentResult?.results?.size?:0
-
-            override val isLastPage: Boolean
-                get() = currentResult != null && currentResult!!.next == null
-
-            override val isLoading: Boolean
-                get() = isReviewsLoading
-
-            override fun loadMoreItems() {
-                if (currentResult == null)
-                    return
-                isReviewsLoading = true
-
-                APIService.getRestaurantReviews(RestaurantGetReviewsRequest(
-                    restaurantId?.toInt()!!,
-                    currentResult!!.next,
-                    5
-                ), createHandler { resp ->
-                    try {
-                        val result = resp.getResult();
-                        progress.visibility = View.GONE
-
-                        adapter.removeLoadingFooter()
-                        isReviewsLoading = false
-
-                        adapter.addAll(result.results)
-                        currentResult = result
-                        if (result.next != null) adapter.addLoadingFooter()
-
-                    } catch (e: APIService.CallFailureException) {
-                        Toast.makeText(
-                            MiniProject.appContext,
-                            e.wrapper?.error?.display,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                })
-            }
-        }
-    }
-
-    override fun initList(adapter: ReviewRecyclerViewAdapter) {
-        APIService.getRestaurantReviews(RestaurantGetReviewsRequest(
-            restaurantId?.toInt()!!,
-            1,
-            5
-        ), createHandler { resp ->
-            try {
-                val result = resp.getResult();
-                progress.visibility = View.GONE
-                adapter.addAll(result.results)
-                currentResult = result
-                if (result.next != null) adapter.addLoadingFooter()
-            } catch (e: APIService.CallFailureException) {
-                Toast.makeText(
-                    MiniProject.appContext,
-                    e.wrapper?.error?.display,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
-    }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

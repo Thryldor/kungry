@@ -57,6 +57,8 @@
 
     <string name="snackbar_title">Un petit creux?</string>
     <string name="snackbar_description">Sélectionnez une épingle afin d\'obtenir plus de détails sur ce restaurant.</string>
+    <string name="location">Lieu</string>
+    <string name="see_more">Voir plus d\'évaluations</string>
 
 </resources>
 

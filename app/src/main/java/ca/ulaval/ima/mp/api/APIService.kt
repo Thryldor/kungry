@@ -147,17 +147,21 @@ object APIService {
         executeRequest(request, handler, type)
     }
 
-    fun getRestaurantById(id: Int, handler: ResponseHandler<Restaurant>) {
-        val url = HttpUrl.Builder()
+    fun getRestaurantById(model: RestaurantGetRequest, handler: ResponseHandler<Restaurant>) {
+        var url = HttpUrl.Builder()
             .scheme(SCHEME)
             .host(HOST)
             .addPathSegment(BASE_PATH)
             .addPathSegment("restaurant")
-            .addPathSegment(id.toString())
-            .build()
+            .addPathSegment(model.id.toString())
+
+        if (model.latitude != null && model.longitude != null) {
+            url = url.addQueryParameter("latitude", model.latitude.toString())
+                .addQueryParameter("longitude", model.longitude.toString())
+        }
 
         val request: Request = Request.Builder()
-            .url(url)
+            .url(url.build())
             .get()
             .build()
 
@@ -165,7 +169,10 @@ object APIService {
         executeRequest(request, handler, type)
     }
 
-    fun getRestaurantReviews(model: RestaurantGetReviewsRequest, handler: ResponseHandler<PaginationResult<Review>>) {
+    fun getRestaurantReviews(
+        model: RestaurantGetReviewsRequest,
+        handler: ResponseHandler<PaginationResult<Review>>
+    ) {
         val url = HttpUrl.Builder()
             .scheme(SCHEME)
             .host(HOST)
