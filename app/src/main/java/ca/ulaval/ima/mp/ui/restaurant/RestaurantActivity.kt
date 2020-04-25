@@ -79,8 +79,8 @@ class RestaurantActivity : AppCompatActivity() {
     private fun handleResult() {
         APIService.getRestaurantById(
             RestaurantGetRequest(
-                currentLocation!!.latitude,
-                currentLocation!!.longitude,
+                currentLocation?.latitude,
+                currentLocation?.longitude,
                 restaurantId!!.toInt()
             ),
             createHandler { response ->
