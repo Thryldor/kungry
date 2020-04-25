@@ -1,6 +1,9 @@
 package ca.ulaval.ima.mp.ui.review.list
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -74,6 +77,16 @@ class ReviewListActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d("RES", "ON ACTIVITY REVIEWLIST: " + requestCode.toString() + " - " + resultCode.toString() + " - " + data.toString())
+        if (requestCode == Activity.RESULT_OK) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.popup, ReviewCreationPopupFragment.newInstance(restaurantId!!.toInt()))
+                .commitNow();
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

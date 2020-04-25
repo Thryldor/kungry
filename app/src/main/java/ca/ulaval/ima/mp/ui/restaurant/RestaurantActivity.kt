@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -21,6 +22,7 @@ import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.*
 import ca.ulaval.ima.mp.tools.TypeConverter
+import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationActivity
 import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationPopupFragment
 import ca.ulaval.ima.mp.ui.review.list.ReviewListActivity
 import ca.ulaval.ima.mp.ui.review.preview.ReviewCommentImageActivity
@@ -28,8 +30,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.restaurant_activity.*
 import kotlinx.android.synthetic.main.restaurant_activity.view.*
+import kotlinx.android.synthetic.main.review_creation_popup_fragment.view.*
 import kotlinx.android.synthetic.main.review_list_item_fragment.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -284,4 +288,13 @@ class RestaurantActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d("RES", "ON ACTIVITY RESULT: " + requestCode.toString() + " - " + resultCode.toString() + " - " + data.toString())
+        if (requestCode == Activity.RESULT_OK) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.popup, ReviewCreationPopupFragment.newInstance(restaurantId!!.toInt()))
+                .commitNow();
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 }
