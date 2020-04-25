@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -19,6 +20,7 @@ import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.*
+import ca.ulaval.ima.mp.tools.TypeConverter
 import ca.ulaval.ima.mp.ui.review.creation.ReviewCreationPopupFragment
 import ca.ulaval.ima.mp.ui.review.list.ReviewListActivity
 import ca.ulaval.ima.mp.ui.review.preview.ReviewCommentImageActivity
@@ -105,10 +107,15 @@ class RestaurantActivity : AppCompatActivity() {
         val phone = restaurant.phone_number!!
         restaurant_name.text = restaurant.name
         restaurant_dist.text = "${restaurant.distance}km"
-        restaurant_phone.text = "(${phone.substring(0, 3)}) ${phone.substring(3, 6)}-${phone.substring(6, phone.length)}"
+        restaurant_phone.text =
+            "(${phone.substring(0, 3)}) ${phone.substring(3, 6)}-${phone.substring(
+                6,
+                phone.length
+            )}"
         restaurant_website.text = restaurant.website
         restaurant_rate.rating = restaurant.review_average!!
-        restaurant_type.text = restaurant.type
+        restaurant_type.text = TypeConverter.convert(restaurant.type!!)
+        setDay(restaurant.opening_hours)
         Picasso.with(this)
             .load(restaurant.image)
             .fit()
@@ -125,6 +132,25 @@ class RestaurantActivity : AppCompatActivity() {
                     ).show()
                 }
             })
+    }
+
+    private fun setDay(openingHours: ArrayList<OpeningHour>?) {
+        val parse = SimpleDateFormat("hh:mm:ss");
+        val format = SimpleDateFormat("hh:mm");
+        for (hours in openingHours!!.iterator()) {
+            val view = when (hours.day) {
+                "SUN" -> sunday
+                "MON" -> monday
+                "TUE" -> tuesday
+                "WED" -> wednesday
+                "THU" -> thursday
+                "FRI" -> friday
+                "SAT" -> saturday
+                else -> null
+            }
+                ?: continue
+            view.text = "${format.format(parse.parse(hours.opening_hour))} à ${format.format(parse.parse(hours.closing_hour))}"
+        }
     }
 
     private fun fetchReviews() {

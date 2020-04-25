@@ -8,6 +8,7 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import ca.ulaval.ima.mp.R
 import ca.ulaval.ima.mp.api.model.RestaurantLight
+import ca.ulaval.ima.mp.tools.TypeConverter
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
@@ -57,7 +58,7 @@ class RestaurantRecyclerViewAdapter(
             RESTAURANT -> {
                 val restaurantHolder = holder as RestaurantViewHolder
                 restaurantHolder.mNameView.text = item.name
-                restaurantHolder.mTypeView.text = "Snack/Food • Confort food"
+                restaurantHolder.mTypeView.text = TypeConverter.convert(item.type!!)
                 restaurantHolder.mNbevalView.text = item.review_count.toString()
                 restaurantHolder.mDistView.text = "${item.distance}km"
                 restaurantHolder.mRatingBar.rating = item.review_average!!

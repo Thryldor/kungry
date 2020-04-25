@@ -3,6 +3,7 @@ package ca.ulaval.ima.mp.ui.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -23,6 +24,8 @@ import ca.ulaval.ima.mp.api.APIService
 import ca.ulaval.ima.mp.api.createHandler
 import ca.ulaval.ima.mp.api.model.RestaurantLight
 import ca.ulaval.ima.mp.api.model.RestaurantsSearchRequest
+import ca.ulaval.ima.mp.tools.TypeConverter
+import ca.ulaval.ima.mp.ui.restaurant.RestaurantActivity
 import ca.ulaval.ima.mp.ui.restaurant.RestaurantMapFragment
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
@@ -90,9 +93,11 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     private fun setupLayoutClickable() {
         mLayoutInfo.setOnClickListener {
             run {
-                // TODO Changer de vue, le restaurant sélectionné est dispo dans mSelectedRestaurant
                 if (mSelectedRestaurant != null) {
-                    Log.d("APP", "Click sur le layout")
+                    val intent = Intent(activity, RestaurantActivity::class.java).apply {
+                        putExtra(RestaurantActivity.RESTAURANT_ID_KEY, mSelectedRestaurant!!.id.toString())
+                    }
+                    startActivity(intent)
                 }
             }
         }
@@ -141,7 +146,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     private fun updateRestaurantInfo(restaurantLight: RestaurantLight?) {
         val bundle = Bundle().apply {
             putString("title", restaurantLight?.name)
-            putString("description", restaurantLight?.type)
+            putString("description", TypeConverter.convert(restaurantLight?.type!!))
             putString("imageLink", restaurantLight?.image)
             putString("distance", restaurantLight?.distance)
             putString("reviewAverage", restaurantLight?.review_average.toString())
